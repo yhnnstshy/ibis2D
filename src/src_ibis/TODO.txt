@@ -1,0 +1,20 @@
+x provide coord files for paul and zaki
+x add boundary area and circumference to results
+x diagnostic plots include image
+x boundary plotted similar to image
+x add scale to results, scale = pixels per xy unit
+x change k14 files to end in k14 (rather that k14 in the middle)
+x center at k=0 (boundary center of mass rather than area center of mass)
+x normalize to unit radius, power for k=1 normalized to 1
+x derive normalization for pure circle
+x try different normalizations, plot them
+x save dict
+x pandas?
+x thermometer plot day 6, tumor
+x add grayscale to thermometer for K14?
+x regress K14 vs power + ctn
+- make thumbnail panel
+- make selection panel with non-selected grayed out
+- write the K14 filename to the results table
+- make PCA plot with outlines
+- write rc files (row_column), 1 unit = 1 pixel

@@ -1,0 +1,1 @@
+python ./ibis2d.py ../data_2016_03_29 ../analysis_2016_03_29 4096

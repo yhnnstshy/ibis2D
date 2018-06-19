@@ -1,0 +1,87 @@
+INFO ibis2d.main: indir ../IMAGES_ALL outdir ../IMAGES_VALID exclude ['Special', 'Day6_DIC']
+INFO ibis2d.main: creating output directory ../IMAGES_VALID
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_01.tif has errors ['day mismatch: ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_01.tif', 'duplicate ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_01.tif ../IMAGES_VALID/CTN045_NAT_Day0_K14_01.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_02.tif has errors ['day mismatch: ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_02.tif', 'duplicate ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_02.tif ../IMAGES_VALID/CTN045_NAT_Day0_K14_02.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_03.tif has errors ['day mismatch: ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_03.tif', 'duplicate ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_03.tif ../IMAGES_VALID/CTN045_NAT_Day0_K14_03.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_04.tif has errors ['day mismatch: ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_04.tif', 'duplicate ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_04.tif ../IMAGES_VALID/CTN045_NAT_Day0_K14_04.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_05.tif has errors ['day mismatch: ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_05.tif', 'duplicate ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_05.tif ../IMAGES_VALID/CTN045_NAT_Day0_K14_05.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_06.tif has errors ['day mismatch: ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_06.tif', 'duplicate ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_06.tif ../IMAGES_VALID/CTN045_NAT_Day0_K14_06.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_07.tif has errors ['day mismatch: ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_07.tif', 'duplicate ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_07.tif ../IMAGES_VALID/CTN045_NAT_Day0_K14_07.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_08.tif has errors ['day mismatch: ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_08.tif', 'duplicate ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_08.tif ../IMAGES_VALID/CTN045_NAT_Day0_K14_08.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_09.tif has errors ['day mismatch: ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_09.tif', 'duplicate ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_09.tif ../IMAGES_VALID/CTN045_NAT_Day0_K14_09.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_10.tif has errors ['day mismatch: ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_10.tif', 'duplicate ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_10.tif ../IMAGES_VALID/CTN045_NAT_Day0_K14_10.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_11.tif has errors ['day mismatch: ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_11.tif', 'duplicate ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_11.tif ../IMAGES_VALID/CTN045_NAT_Day0_K14_11.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_12.tif has errors ['day mismatch: ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_12.tif', 'duplicate ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_12.tif ../IMAGES_VALID/CTN045_NAT_Day0_K14_12.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_13.tif has errors ['day mismatch: ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_13.tif', 'duplicate ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_13.tif ../IMAGES_VALID/CTN045_NAT_Day0_K14_13.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_14.tif has errors ['day mismatch: ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_14.tif', 'duplicate ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_14.tif ../IMAGES_VALID/CTN045_NAT_Day0_K14_14.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_15.tif has errors ['day mismatch: ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_15.tif', 'duplicate ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_15.tif ../IMAGES_VALID/CTN045_NAT_Day0_K14_15.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_16.tif has errors ['day mismatch: ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_16.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_17.tif has errors ['day mismatch: ../IMAGES_ALL/NAT/CTN045_NAT_Day6/CTN045_NAT_Day0_K14_17.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_01.tif has errors ['day mismatch: ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_01.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_02.tif has errors ['day mismatch: ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_02.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_03.tif has errors ['day mismatch: ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_03.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_04.tif has errors ['day mismatch: ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_04.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_05.tif has errors ['day mismatch: ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_05.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_06.tif has errors ['day mismatch: ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_06.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_07.tif has errors ['day mismatch: ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_07.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_08.tif has errors ['day mismatch: ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_08.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_09.tif has errors ['day mismatch: ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_09.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_10.tif has errors ['day mismatch: ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_10.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_11.tif has errors ['day mismatch: ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_11.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_12.tif has errors ['day mismatch: ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_12.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_13.tif has errors ['day mismatch: ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_13.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_14.tif has errors ['day mismatch: ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_14.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_15.tif has errors ['day mismatch: ../IMAGES_ALL/Normal Mammary/CTN063_Normal_Day6/CTN063_Normal_Day0_K14_15.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN004_Day4/CTN004_Day0_K14_01.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN004_Day4/CTN004_Day0_K14_01.tif', 'duplicate ../IMAGES_ALL/Tumor/CTN004_Day4/CTN004_Day0_K14_01.tif ../IMAGES_VALID/CTN004_Tumor_Day0_K14_01.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN004_Day4/CTN004_Day0_K14_02.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN004_Day4/CTN004_Day0_K14_02.tif', 'duplicate ../IMAGES_ALL/Tumor/CTN004_Day4/CTN004_Day0_K14_02.tif ../IMAGES_VALID/CTN004_Tumor_Day0_K14_02.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN004_Day4/CTN004_Day0_K14_03.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN004_Day4/CTN004_Day0_K14_03.tif', 'duplicate ../IMAGES_ALL/Tumor/CTN004_Day4/CTN004_Day0_K14_03.tif ../IMAGES_VALID/CTN004_Tumor_Day0_K14_03.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN004_Day4/CTN004_Day0_K14_04.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN004_Day4/CTN004_Day0_K14_04.tif', 'duplicate ../IMAGES_ALL/Tumor/CTN004_Day4/CTN004_Day0_K14_04.tif ../IMAGES_VALID/CTN004_Tumor_Day0_K14_04.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN004_Day4/CTN004_Day0_K14_05.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN004_Day4/CTN004_Day0_K14_05.tif', 'duplicate ../IMAGES_ALL/Tumor/CTN004_Day4/CTN004_Day0_K14_05.tif ../IMAGES_VALID/CTN004_Tumor_Day0_K14_05.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN004_Day4/CTN004_Day0_K14_06.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN004_Day4/CTN004_Day0_K14_06.tif', 'duplicate ../IMAGES_ALL/Tumor/CTN004_Day4/CTN004_Day0_K14_06.tif ../IMAGES_VALID/CTN004_Tumor_Day0_K14_06.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN004_Day4/CTN004_Day0_K14_07.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN004_Day4/CTN004_Day0_K14_07.tif', 'duplicate ../IMAGES_ALL/Tumor/CTN004_Day4/CTN004_Day0_K14_07.tif ../IMAGES_VALID/CTN004_Tumor_Day0_K14_07.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN004_Day4/CTN004_Day0_K14_08.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN004_Day4/CTN004_Day0_K14_08.tif']
+INFO ibis2d.validate_files_recursive: excluding ../IMAGES_ALL/Tumor/CTN024_Day6_DIC/CTN024_Day6_DIC_00.tif
+INFO ibis2d.validate_files_recursive: excluding ../IMAGES_ALL/Tumor/CTN024_Day6_DIC/CTN024_Day6_DIC_01.tif
+INFO ibis2d.validate_files_recursive: excluding ../IMAGES_ALL/Tumor/CTN024_Day6_DIC/CTN024_Day6_DIC_02.tif
+INFO ibis2d.validate_files_recursive: excluding ../IMAGES_ALL/Tumor/CTN024_Day6_DIC/CTN024_Day6_DIC_03.tif
+INFO ibis2d.validate_files_recursive: excluding ../IMAGES_ALL/Tumor/CTN024_Day6_DIC/CTN024_Day6_DIC_04.tif
+INFO ibis2d.validate_files_recursive: excluding ../IMAGES_ALL/Tumor/CTN024_Day6_DIC/CTN024_Day6_DIC_05.tif
+INFO ibis2d.validate_files_recursive: excluding ../IMAGES_ALL/Tumor/CTN024_Day6_DIC/CTN024_Day6_DIC_06.tif
+INFO ibis2d.validate_files_recursive: excluding ../IMAGES_ALL/Tumor/CTN024_Day6_DIC/CTN024_Day6_DIC_07.tif
+INFO ibis2d.validate_files_recursive: excluding ../IMAGES_ALL/Tumor/CTN024_Day6_DIC/CTN024_Day6_DIC_08.tif
+INFO ibis2d.validate_files_recursive: excluding ../IMAGES_ALL/Tumor/CTN024_Day6_DIC/CTN024_Day6_DIC_09.tif
+INFO ibis2d.validate_files_recursive: excluding ../IMAGES_ALL/Tumor/CTN024_Day6_DIC/CTN024_Day6_DIC_10.tif
+INFO ibis2d.validate_files_recursive: excluding ../IMAGES_ALL/Tumor/CTN024_Day6_DIC/CTN024_Day6_DIC_11.tif
+INFO ibis2d.validate_files_recursive: excluding ../IMAGES_ALL/Tumor/CTN024_Day6_DIC/CTN024_Day6_DIC_12.tif
+INFO ibis2d.validate_files_recursive: excluding ../IMAGES_ALL/Tumor/CTN024_Day6_DIC/CTN024_Day6_DIC_13.tif
+INFO ibis2d.validate_files_recursive: excluding ../IMAGES_ALL/Tumor/CTN024_Day6_DIC/CTN024_Day6_DIC_14.tif
+INFO ibis2d.validate_files_recursive: excluding ../IMAGES_ALL/Tumor/CTN024_Day6_DIC/CTN024_Day6_DIC_15.tif
+INFO ibis2d.validate_files_recursive: excluding ../IMAGES_ALL/Tumor/CTN024_Day6_DIC/CTN024_Day6_DIC_16.tif
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN069_Day0/CTN069_Day6_K14_01.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN069_Day0/CTN069_Day6_K14_01.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN069_Day0/CTN069_Day6_K14_02.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN069_Day0/CTN069_Day6_K14_02.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN069_Day0/CTN069_Day6_K14_03.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN069_Day0/CTN069_Day6_K14_03.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN069_Day0/CTN069_Day6_K14_04.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN069_Day0/CTN069_Day6_K14_04.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN069_Day0/CTN069_Day6_K14_05.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN069_Day0/CTN069_Day6_K14_05.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN069_Day0/CTN069_Day6_K14_06.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN069_Day0/CTN069_Day6_K14_06.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN069_Day0/CTN069_Day6_K14_07.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN069_Day0/CTN069_Day6_K14_07.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN069_Day0/CTN069_Day6_K14_08.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN069_Day0/CTN069_Day6_K14_08.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN069_Day0/CTN069_Day6_K14_09.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN069_Day0/CTN069_Day6_K14_09.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN069_Day0/CTN069_Day6_K14_10.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN069_Day0/CTN069_Day6_K14_10.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_01.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_01.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_02.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_02.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_03.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_03.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_04.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_04.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_05.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_05.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_06.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_06.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_07.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_07.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_08.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_08.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_09.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_09.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_10.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_10.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_11.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_11.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_12.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_12.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_13.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_13.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_14.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_14.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_15.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_15.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_16.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_16.tif']
+WARNING ibis2d.validate_file: file ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_17.tif has errors ['day mismatch: ../IMAGES_ALL/Tumor/CTN106_Day0/CTN106_Day6_K14_17.tif']
+INFO ibis2d.validate_files_recursive: npass 2461 nfail 67 nexclude 17
