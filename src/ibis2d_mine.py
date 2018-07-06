@@ -446,8 +446,7 @@ def read_image_orig(fullpath):
     
     return(img_rgb, scale, str(phototag), tag_color)
 
-
-def test(data_folder='/Users/ytsehay/work/data_set_2/test', file_number='91'):
+def test(data_folder='.', file_number='0'):
     dic_folder_name = 'DIC'
     k14_folder_name = 'K14'
     xy_coord_folder_name = 'XY'
@@ -456,13 +455,9 @@ def test(data_folder='/Users/ytsehay/work/data_set_2/test', file_number='91'):
     plotfile = os.path.join(data_folder, 'organoids.pdf')
     pdf = PdfPages(plotfile)
     
-
     org_folder_names = [f for f in os.listdir(data_folder + '/' + dic_folder_name) if not f.startswith('.')]
 
     org_folder_names = sorted(org_folder_names)
-
-    print(org_folder_names)
-
 
     k_max = 128/2 # the k index goes from -nfft/2 to +nfft/2
     k_vector = np.arange(1 + k_max)
@@ -542,12 +537,14 @@ def test(data_folder='/Users/ytsehay/work/data_set_2/test', file_number='91'):
     plt.ylabel('Power k^2')
     plt.title('Spectral %.3f' % (sumpowerksq))
 
-    pdf.savefig()
-    plt.close()
-    pdf.close()
+    #pdf.savefig()
+    plt.show()
+    #plt.close()
+    #pdf.close()
     
 
 def combine_images(data_folder, output_folder):
+    print ("Info: combining images ...")
     if (not os.path.isdir(output_folder)):
         os.makedirs(output_folder)
 
@@ -563,7 +560,14 @@ def combine_images(data_folder, output_folder):
             (img_DIC, scale_DIC, tag_photometric_DIC, tag_color_DIC) = read_image_orig(os.path.join(data_folder, 'DIC', folder, f))
             (img_K14, scale_K14, tag_photometric_K14, tag_color_K14) = read_image_orig(os.path.join(data_folder, 'K14', folder, f))
 
-            combined_img = np.concatenate((img_DIC[:,:,:3], img_K14[:,:,:3]), axis=1)
+            #The images are mostly RGBA
+            if(img_DIC.shape[2] == 3):
+                combined_img = np.concatenate((img_DIC, img_K14), axis=1)
+            elif (img_DIC.shape[2] > 3):
+                combined_img = np.concatenate((img_DIC[:,:,:3], img_K14[:,:,:3]), axis=1)
+            else:
+                print ("Info: image dimentions are invalid. Skipping ...")
+                continue
 
             new_img = Image.fromarray(combined_img)
 
@@ -1400,30 +1404,41 @@ def print_stats(results):
 
 def main():
     parser = argparse.ArgumentParser(description='Stack 2D images make a 3D rendering', epilog='', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument('--datafolder', help='input directory with all the data', required=True)
     parser.add_argument('--images', help='input directory with image files as .tif', required=False)
     parser.add_argument('--coords', help='input directory with coordinates as .txt files with 2 columns, no header', required=False)
     parser.add_argument('--nfft', help='number of points of FFT', type=int, default=128, required=False)
-    parser.add_argument('--outdir', help='output directory', default='_output', required=False)
+    parser.add_argument('--outdir', help='output directory', default='output', required=False)
     parser.add_argument('--calculate', help='calculate everything', choices=['y','n'], required=False, default='n')
     parser.add_argument('--thumbnails', help='make thumbnails', choices=['y','n'], required=False, default='n')
     parser.add_argument('--thermometers', help='make thumbnails', choices=['y','n'], required=False, default='n')
     parser.add_argument('--dim', help='dimension of data', choices=[2], type=int, required=False, default=2)
-
+    parser.add_argument('--test', help='test to see if images and boundaries match', choices=['y','n'], required=False, default='n')
+    parser.add_argument('--filenumber', help='filenumber to test', type=str, required=False, default=1)
+    parser.add_argument('--combineimgs', help='combine DIC and K14 images', choices=['y','n'], required=False, default='n')
     args = parser.parse_args()
 
-    data_folder = '/Users/ytsehay/work/data_set_2/test/'
-    output_folder = os.path.join(data_folder, 'image_pair')
+    #data_folder = '/Users/ytsehay/work/data_set_2/test/'
+    #output_folder = os.path.join(data_folder, 'image_pair')
 
     #combine_images(data_folder, output_folder)
 
 
     #return None
 
-    args.images = '/Users/ytsehay/work/data_set_2/test/image_pair/1_LargeOrgs_Day5'
-    args.coords ='/Users/ytsehay/work/data_set_2/test/XY/1_LargeOrgs_Day5'
-    args.outdir = os.path.join(data_folder, 'Run_1')
+    #args.images = '/Users/ytsehay/work/data_set_2/test/image_pair/1_LargeOrgs_Day5'
+    #args.coords ='/Users/ytsehay/work/data_set_2/test/XY/1_LargeOrgs_Day5'
+    #args.outdir = os.path.join(data_folder, 'Run_1')
 
-    args.calculate = 'y'
+    #args.calculate = 'y'
+
+    if(args.test == 'y'):
+        test(args.datafolder, args.filenumber)
+        return None
+
+    if(args.combineimgs == 'y'):
+        combine_images(args.datafolder, args.outdir)
+        return None
 
     if (not os.path.isdir(args.outdir)):
         logger.info('creating output directory %s', args.outdir)
