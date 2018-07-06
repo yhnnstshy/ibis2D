@@ -1,4 +1,4 @@
-time python ../../src/ibis2d.py --veenafile Veena_Orig.txt --matchfile Veena_Matches.txt --dic_orig ../../../data --outdir _output --coords ../../../coords/ --nfft 256
+time python ./ibis2d.py --veenafile Veena_Orig.txt --matchfile Veena_Matches.txt --dic_orig ../IMAGES_Tumor_Day6_DIC_K14_original --outdir ../autoveena_2017_12_14 --coords ../COORDS_VALID --nfft 256
 
 #time python ./ibis2d.py --veenafile Veena_Orig.txt --matchfile Veena_Matches.txt --invasionfile invasion_table.txt --k14file k14_table.txt --dic_orig ../IMAGES_Tumor_Day6_DIC_K14_original --outdir ../autoveena_2017_10_23 --coords ../COORDS_VALID --nfft 256
 
