@@ -41,7 +41,7 @@ logger.setLevel(logging.INFO)
 MAXK = 21
 
 ANNOTS = ['Normal', 'NAT', 'Tumor']
-DAYNUMS = ['0','6']
+DAYNUMS = ['0','5']
 
 def get_files_recursive(indir, pattern_str):
     ret = [ ]
@@ -680,10 +680,10 @@ def write_image_thumbnails(outdir, imagedir, results_dict, points_dict):
     imagefiles = [ ]
     for c in coordfiles:
         (root, base) = os.path.split(c)
-        toks = base.split('_')
-        assert(toks[-1] == 'xy.txt'), 'coordinate file does not end in _xy.txt: %s' % c
-        toks[-1] = 'K14.tif'
-        newbase = '_'.join(toks)
+        toks = base.split('.')
+        assert(toks[-1] == 'txt'), 'coordinate file does not end in _xy.txt: %s' % c
+        toks[-1] = '.tif'
+        newbase = ''.join(toks)
         imagefile = os.path.join(imagedir, newbase)
         imagefiles.append(imagefile)
         if not os.path.isfile(imagefile):
@@ -1189,6 +1189,21 @@ def write_thermometers(filename, organoid_list, group_list, invasion_list, point
     plt.savefig(filename)
     plt.close()
 
+def write_results(outdir, results_dict):
+    samples = sorted(results_dict.keys())
+    fields = dict()
+    for s in samples:
+        for f in results_dict[s].keys():
+            fields[f] = fields.get(f, 0) + 1
+    fields_list = sorted(fields.keys())
+    logger.info('table fields: %s', str(fields_list))
+    fp = open(os.path.join(outdir, 'results_table.txt'), 'w')
+    fp.write('\t'.join(['filename'] + fields_list) + '\n')
+    for s in samples:
+        toks = [s] + [ str(results_dict[s][v]) for v in fields_list ]
+        fp.write('\t'.join(toks) + '\n')
+    fp.close()
+
 def calculate(args):
 
     all_coords = get_files_recursive(args.coords, '*.txt')
@@ -1348,20 +1363,6 @@ def calculate(args):
     
     return(results_dict, points_dict, power_dict, rfft_dict)
 
-def write_results(outdir, results_dict):
-    samples = sorted(results_dict.keys())
-    fields = dict()
-    for s in samples:
-        for f in results_dict[s].keys():
-            fields[f] = fields.get(f, 0) + 1
-    fields_list = sorted(fields.keys())
-    logger.info('table fields: %s', str(fields_list))
-    fp = open(os.path.join(outdir, 'results_table.txt'), 'w')
-    fp.write('\t'.join(['filename'] + fields_list) + '\n')
-    for s in samples:
-        toks = [s] + [ str(results_dict[s][v]) for v in fields_list ]
-        fp.write('\t'.join(toks) + '\n')
-    fp.close()
 
 def read_results(outdir):
     results_file = os.path.join(outdir, 'results_table.txt')
@@ -1416,21 +1417,32 @@ def main():
     parser.add_argument('--test', help='test to see if images and boundaries match', choices=['y','n'], required=False, default='n')
     parser.add_argument('--filenumber', help='filenumber to test', type=str, required=False, default=1)
     parser.add_argument('--combineimgs', help='combine DIC and K14 images', choices=['y','n'], required=False, default='n')
+    parser.add_argument('--orgnum', help='is organoid number', required=False)
+    parser.add_argument('--orgsize', help='is organoid small or large?', choices=['small', 'large'], required=False)
+    parser.add_argument('--daynum', help='the number of days for culturing organoid', required=False)
     args = parser.parse_args()
 
-    #data_folder = '/Users/ytsehay/work/data_set_2/test/'
-    #output_folder = os.path.join(data_folder, 'image_pair')
+    #data_folder = '../data'
+    #output_folder = os.path.join(data_folder, 'Images')
 
     #combine_images(data_folder, output_folder)
 
 
     #return None
 
-    #args.images = '/Users/ytsehay/work/data_set_2/test/image_pair/1_LargeOrgs_Day5'
-    #args.coords ='/Users/ytsehay/work/data_set_2/test/XY/1_LargeOrgs_Day5'
-    #args.outdir = os.path.join(data_folder, 'Run_1')
+    #args.datafolder = '..'
+    #args.images = '/Users/ytsehay/work/tmp/data/Images'
+    #args.coords ='/Users/ytsehay/work/tmp/data/XY'
+    #args.outdir = os.path.join(args.datafolder, 'run')
+    #args.orgnum = '1'
+    #args.orgsize = 'large'
+    #args.daynum = '5'
 
     #args.calculate = 'y'
+    #args.thumbnails = 'y'
+    #args.thermometers = 'y'
+
+
 
     if(args.test == 'y'):
         test(args.datafolder, args.filenumber)
@@ -1440,13 +1452,16 @@ def main():
         combine_images(args.datafolder, args.outdir)
         return None
 
+    delimiter='_'
+    args.outdir=delimiter.join((args.outdir, args.orgnum, args.orgsize, 'day', args.daynum))
+
     if (not os.path.isdir(args.outdir)):
         logger.info('creating output directory %s', args.outdir)
         os.makedirs(args.outdir)
-    for subdir in (['FIGURES','IMAGES','HISTOGRAMS']):
-        subdirpath = os.path.join(args.outdir, subdir)
-        if (not os.path.isdir(subdirpath)):
-            os.makedirs(subdirpath)
+    #for subdir in (['FIGURES','IMAGES','HISTOGRAMS']):
+    #    subdirpath = os.path.join(args.outdir, subdir)
+    #    if (not os.path.isdir(subdirpath)):
+    #        os.makedirs(subdirpath)
     
     picklefile = os.path.join(args.outdir, 'calculate.pkl')
     prot = cPickle.HIGHEST_PROTOCOL
@@ -1480,7 +1495,7 @@ def main():
     
     # analyze_results(args.outdir, results_dict)
         
-    print_stats(results)
+    #print_stats(results)
 
     return None
 
