@@ -681,7 +681,7 @@ def write_image_thumbnails(outdir, imagedir, results_dict, points_dict):
     for c in coordfiles:
         (root, base) = os.path.split(c)
         toks = base.split('.')
-        assert(toks[-1] == 'txt'), 'coordinate file does not end in _xy.txt: %s' % c
+        assert(toks[-1] == 'txt'), 'coordinate file does not end in .txt: %s' % c
         toks[-1] = '.tif'
         newbase = ''.join(toks)
         imagefile = os.path.join(imagedir, newbase)
@@ -829,37 +829,38 @@ def write_boundary_thumbnails(outdir, results_dict, points_dict):
         plt.savefig(os.path.join(outdir, myfilename))
         plt.close()
         
-    for annot in ANNOTS:
-        for day in DAYNUMS:
-            title = 'Boundaries, %s Day %s' % (annot, day)
-            filename = 'thumbnails_boundaries_%s_%s.pdf' % (annot, day)
-            plt.figure(figsize=FIGSIZE)
-            plt.title(title)
-            plt.gca().set_aspect('equal')
-            axes = plt.gca()
-            cnt = 0
-            for (k) in byname:
-                pts = points_dict[k]
-                row = cnt // nside
-                col = cnt % nside
-                dx = col * dw
-                dy = row * dh
-                newx = pts[:,0] + dx
-                newy = pts[:,1] + dy
-                xy = zip(newx, newy)
-                alpha = 0.2
-                fc = 'gray'
-                #if (results_dict[k]['annot'] == annot) and (results_dict[k]['daynum'] == day):
-                #    alpha = 1.0
-                #    fc = name2color[k]   
-                axes.add_patch(Polygon(xy, closed=True, facecolor=fc, edgecolor='none', alpha=alpha) )
-                cnt = cnt + 1
-        
-            axes.autoscale_view()    
-            plt.gca().invert_yaxis()
-            plt.axis('off')
-            plt.savefig(os.path.join(outdir, filename))
-            plt.close()            
+    #for annot in ANNOTS:
+    #    for day in DAYNUMS:
+    #        title = 'Boundaries, %s Day %s' % (annot, day)
+    #        filename = 'thumbnails_boundaries_%s_%s.pdf' % (annot, day)
+    #        plt.figure(figsize=FIGSIZE)
+    #        plt.title(title)
+    #        plt.gca().set_aspect('equal')
+    #        axes = plt.gca()
+    #        cnt = 0
+    #        for (k) in byname:
+    #            pts = points_dict[k]
+    #            row = cnt // nside
+    #            col = cnt % nside
+    #            dx = col * dw
+    #            dy = row * dh
+    #            newx = pts[:,0] + dx
+    #            newy = pts[:,1] + dy
+    #            xy = zip(newx, newy)
+    #            alpha = 0.2
+    #            fc = 'gray'
+    #            #if (results_dict[k]['annot'] == annot) and (results_dict[k]['daynum'] == day):
+    #            #    alpha = 1.0
+    #            #    fc = name2color[k]   
+    #            axes.add_patch(Polygon(xy, closed=True, facecolor=fc, edgecolor='none', alpha=alpha) )
+    #            cnt = cnt + 1
+    #    
+    #        axes.autoscale_view()    
+    #        plt.gca().invert_yaxis()
+    #        plt.axis('off')
+    #        plt.savefig(os.path.join(outdir, filename))
+    #        plt.close()            
+    return None 
 
 def get_gray(mystr):
     myval = 0.01 * float(mystr)
@@ -1417,9 +1418,6 @@ def main():
     parser.add_argument('--test', help='test to see if images and boundaries match', choices=['y','n'], required=False, default='n')
     parser.add_argument('--filenumber', help='filenumber to test', type=str, required=False, default=1)
     parser.add_argument('--combineimgs', help='combine DIC and K14 images', choices=['y','n'], required=False, default='n')
-    parser.add_argument('--orgnum', help='is organoid number', required=False)
-    parser.add_argument('--orgsize', help='is organoid small or large?', choices=['small', 'large'], required=False)
-    parser.add_argument('--daynum', help='the number of days for culturing organoid', required=False)
     args = parser.parse_args()
 
     #data_folder = '../data'
@@ -1451,9 +1449,6 @@ def main():
     if(args.combineimgs == 'y'):
         combine_images(args.datafolder, args.outdir)
         return None
-
-    delimiter='_'
-    args.outdir=delimiter.join((args.outdir, args.orgnum, args.orgsize, 'day', args.daynum))
 
     if (not os.path.isdir(args.outdir)):
         logger.info('creating output directory %s', args.outdir)
