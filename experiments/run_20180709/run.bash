@@ -16,6 +16,6 @@ source /Users/ytsehay/work/py_env/bin/activate
 DATAFOLDER='/Users/ytsehay/work/data_2'
 SUBDIRNAME=${ORGNUM}_${ORGSIZE}Orgs_Day${DAYNUM}
 
-python /Users/ytsehay/work/project/src/ibis2d_mine.py --datafolder ${DATAFOLDER} --images ${DATAFOLDER}/Images/${SUBDIRNAME} --coords ${DATAFOLDER}/XY/${SUBDIRNAME} --outdir ${SUBDIRNAME} --calculate y
+python /Users/ytsehay/work/project/src/ibis2d_mine.py --datafolder ${DATAFOLDER} --images ${DATAFOLDER}/K14/${SUBDIRNAME} --coords ${DATAFOLDER}/XY/${SUBDIRNAME} --outdir ${SUBDIRNAME} --calculate y
 
 deactivate

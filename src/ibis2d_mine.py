@@ -28,6 +28,8 @@ import matplotlib.image as mpimg
 import matplotlib.lines as mlines
 from matplotlib.patches import Polygon
 
+from skimage.restoration import unwrap_phase
+
 import statsmodels.api as sm
 
 from PIL import Image, ImageDraw
@@ -345,6 +347,8 @@ def xyfile_to_spectrum(xyfile, nfft):
     return(xy_raw, xy_interp, xy_hat, tot_length, area, form_factor, power_norm)
 
 def rgb2gray(img_rgb):
+    if (img_rgb.shape[2] == 4):
+        img_rgb = img_rgb[:,:,:3]
     assert(len(img_rgb.shape) == 3), 'bad shape'
     assert(img_rgb.shape[2] == 3), 'bad rgb dimension'
     img_gray = img_rgb[:,:,0] + img_rgb[:,:,1] + img_rgb[:,:,2]
@@ -431,6 +435,8 @@ def read_image_orig(fullpath):
         logger.warn('%s bad resolution %s %s', fullpath, xresolution, yresolution)
     #scale = float(xresolution)
     scale = eval("1.0*" + xresolution) # sometimes scalestr is 122093/62500
+    #Scale is determined by looking at the images
+    scale = 2.0
     #logger.info('resolution x %s y %s x %s y %s scale %s scale %s', xtag, ytag, xresolution, yresolution, scalestr, str(scale))
     
     phototag = tags.get('Image PhotometricInterpretation', 'NA')
@@ -1315,11 +1321,13 @@ def calculate(args):
             img = mpimg.imread(image_file)
             logger.info('image shape: %s', str(img.shape))
             assert( (len(img.shape) >= 2) and (len(img.shape) <= 3) ), 'bad shape'
-            img_mode = 'GRAY'
-            if (len(img.shape) == 3):
-                img_mode = 'RGB'
-                img_rgb = np.copy(img)
-                img = rgb2gray(img_rgb)
+            #img_mode = 'GRAY'
+            #if (len(img.shape) == 3):
+            #    img_mode = 'RGB'
+            #    img_rgb = np.copy(img)
+            #    img = rgb2gray(img_rgb)
+            img_mode = 'RGB'
+            img = img[:,:,:3]
             
             xtag = tags.get('Image XResolution', "1")
             ytag = tags.get('Image YResolution', "1")
@@ -1330,8 +1338,10 @@ def calculate(args):
                 logger.warn('%s bad resolution %s %s', image_file, xresolution, yresolution)
             scalestr = str(xresolution)
             scale = eval("1.0*" + scalestr)
-            (img_boundary, boundary_np) = create_boundary(img, points_grid, scale, 'nofill')
-            (img_fill, fill_np) = create_boundary(img, points_grid, scale, 'fill')
+            #Scale is determined experimentally
+            scale = 2.0
+            (img_boundary, boundary_np) = create_boundary(rgb2gray(img), points_grid, scale, 'nofill')
+            (img_fill, fill_np) = create_boundary(rgb2gray(img), points_grid, scale, 'fill')
 
             pixels = img[ fill_np > 0 ]
             pixelsummary_inside = get_pixelsummary(pixels.ravel())
@@ -1404,6 +1414,268 @@ def print_stats(results):
     print "\n"
     return None
 
+def read_image_pair(fullpath):
+    img_orig = mpimg.imread(fullpath)
+    img_rgb = None
+    tag_color = None
+    if (img_orig.ndim == 3):
+        tag_color = 'rgb'
+        img_rgb = img_orig
+    elif (img_orig.ndim == 2):
+        tag_color = 'gray'
+        myshape = ( img_orig.shape[0], img_orig.shape[1], 3 )
+        img_rgb = np.zeros(myshape)
+        for k in range(3):
+            img_rgb[:,:,k] = img_orig[:,:]
+    else:
+        logger.info('bad shape: %s', str(img_orig.shape))
+        img_rgb = img_orig
+    ny = img_rgb.shape[1]/2
+    orig_left = img_rgb[:, 0:ny, ...]
+    orig_right = img_rgb[:, ny:(2*ny), ...]
+    (img_orig_dic, img_orig_k14) = (orig_left, orig_right)
+    (mydir, filename) = os.path.split(fullpath)
+
+    tags = get_tags(fullpath)
+    #for t in sorted(tags.keys()):
+    #    logger.info('%s tag %s value %s', t, str(tags[t]))
+    xtag = tags.get('Image XResolution', "1")
+    ytag = tags.get('Image YResolution', "1")
+    samplesperpixel = str(tags['Image SamplesPerPixel'])
+    xresolution = str(xtag)
+    yresolution = str(ytag)
+    if (xresolution != yresolution):
+        logger.warn('%s bad resolution %s %s', fullpath, xresolution, yresolution)
+    #scale = float(xresolution)
+    scale = eval("1.0*" + xresolution) # sometimes scalestr is 122093/62500
+    #Scale is determined by looking at the images
+    scale = 2.0
+    #logger.info('resolution x %s y %s x %s y %s scale %s scale %s', xtag, ytag, xresolution, yresolution, scalestr, str(scale))
+    
+    phototag = tags.get('Image PhotometricInterpretation', 'NA')
+    pixelmink14 = np.amin(img_orig_k14)
+    pixelmaxk14 = np.amax(img_orig_k14)
+    pixelmindic = np.amin(img_orig_dic)
+    pixelmaxdic = np.amax(img_orig_dic)
+    #logger.info('%s phototag %s before k14 min %d max %d dic min %d max %d', fullpath, phototag, pixelmink14, pixelmaxk14, pixelmindic, pixelmaxdic)
+    if (str(phototag) == '1'):
+        # logger.info('inverting scale')
+        img_orig_k14 = 255 - img_orig_k14
+        img_orig_dic = 255 - img_orig_dic
+    pixelmink14 = np.amin(img_orig_k14)
+    pixelmaxk14 = np.amax(img_orig_k14)
+    pixelmindic = np.amin(img_orig_dic)
+    pixelmaxdic = np.amax(img_orig_dic)
+    #logger.info('%s phototag %s  after k14 min %d max %d dic min %d max %d', fullpath, phototag, pixelmink14, pixelmaxk14, pixelmindic, pixelmaxdic)
+    
+    return(img_orig_dic, img_orig_k14, scale, str(phototag), tag_color)
+
+def calc_inv_vs_k14(args):
+
+    orig_dir = args.images
+    xy_dir = args.coords
+    nfft = args.nfft
+    outdir = args.outdir
+    
+    filenames = os.listdir(orig_dir)
+    new_table = dict()
+    org_id = [f.split('.')[0] for f in filenames]
+    for i in org_id:
+        new_table[i] = dict()
+    new_fields = ['invasion_spectral', 'invasion_ff',
+                  'size_area', 'size_perimeter', 'size_npixel', 'size_frac',
+                  'k14_mean', 'k14_sum',
+                  'tag_photometric', 'tag_color', 'tag_scale']
+    for k in new_table:
+        for f in new_fields:
+            new_table[k][f] = '-1'
+            
+    plotfile = os.path.join(outdir, 'organoids.pdf')
+    pdf = PdfPages(plotfile)
+
+    ctn_list = new_table.keys()
+    ctn_list.sort(key=float)
+
+    k_vector = np.arange(1 + (nfft/2)) # since rfft uses only half the range
+    k_sq = k_vector * k_vector # element multiply
+    # a reasonable smoothing function is exp(- omega^2 t^2) with t the smoothing width
+    # t = 1 is nearest neighbor
+    # omega = (2 pi / T) k
+    # so smooth the power with exp( - (2 pi / T)^2 k^2 )
+    fac = 2.0 * math.pi / float(nfft)
+    facsq = fac * fac
+    smooth = np.exp(-facsq * k_sq)
+    
+    organoids = ctn_list
+    nrow = len(ctn_list)
+    ncol = 4
+
+    ff_list = [ ]
+    sumpower_list = [ ]
+    sumpowerksq_list = [ ]
+    k14mean_list = [ ]
+    k14sum_list = [ ]
+    k14veena_list = [ ]
+    area_list = [ ]
+    sizefrac_list = [ ]
+
+    plt.figure(figsize=(30, nrow * ncol))
+    rownum = 0        
+    #    for c in ctn_list:
+    # for c in ['CTN005']:
+    #for c in ctn_list[:3]:
+    for k in ctn_list:
+        # k14 begin
+        logger.info('... %s', k)
+        
+        xy_file = os.path.join(xy_dir, k + '.txt')
+        (xy_raw, xy_interp, xy_hat, tot_length, area, form_factor, power_norm) = xyfile_to_spectrum(xy_file, nfft)
+        power_norm = power_norm * smooth
+        power_ksq = power_norm * k_sq
+        sumpower = sum(power_norm[2:])
+        sumpowerksq = sum(power_ksq[2:])
+
+        rownum += 1
+        fullpath = os.path.join(orig_dir, k + '.tif')
+        (img_dic, img_k14, scale, tag_photometric, tag_color) = read_image_pair(fullpath)
+        i = (rownum - 1) * ncol # plot sequence number starting point
+        
+        size_area = scale * scale * area
+        size_perimeter = scale * tot_length
+
+        # extract k14 intensity from image
+        (img_fill, fill_np) = create_boundary(img_k14, xy_interp, scale, 'fill')
+        pixels_inside = img_k14[ fill_np > 0 ]
+        pixels_outside = img_k14[ fill_np == 0 ]
+        
+        k14sum = np.sum(pixels_inside.ravel())
+        k14mean = np.mean(pixels_inside.ravel())
+        ninside = len(pixels_inside.ravel())
+        ntotal = len(img_k14.ravel())
+        # logger.info('%s %d pixels, sum = %f, mean = %f', k, ninside, k14sum, k14mean)
+        if (tag_photometric == '1'):
+            k14mean = 255.0 - k14mean
+            k14sum = (255.0 * ninside) - k14sum
+            # logger.info('-> %d pixels, sum = %f, mean = %f', ninside, k14sum, k14mean)
+        k14sum = k14sum / float(ntotal * 255)
+        k14mean = k14mean / 255.0
+        # logger.info('k14 mean %f, k14sum normalized %f for %d total pixels', k14mean, k14sum, ntotal)            
+
+        size_npixel = ninside
+        if (tag_color == 'rgb'):
+            size_npixel = size_npixel / 3.0
+        size_frac = float(ninside)/float(ntotal)
+        
+        new_table[k]['invasion_spectral'] = str(sumpowerksq)
+        new_table[k]['invasion_ff'] = str(form_factor)
+        new_table[k]['size_area'] = str(size_area)
+        new_table[k]['size_perimeter'] = str(size_perimeter)
+        new_table[k]['size_npixel'] = str(size_npixel)
+        new_table[k]['size_frac'] = str(size_frac)
+        new_table[k]['k14_sum'] = str(k14sum)
+        new_table[k]['k14_mean'] = str(k14mean)
+        new_table[k]['tag_photometric'] = tag_photometric
+        new_table[k]['tag_color'] = tag_color
+        new_table[k]['tag_scale'] = str(scale)
+
+        ff_list.append(form_factor)
+        sumpower_list.append(sumpower)
+        sumpowerksq_list.append(sumpowerksq)
+        k14mean_list.append(k14mean)
+        k14sum_list.append(k14sum)
+        area_list.append(size_area)
+        sizefrac_list.append(size_frac)
+        
+        # all the plots
+        
+        i = (rownum - 1) * ncol # plot sequence number starting point
+
+        # K14 image
+        i += 1
+        plt.subplot(nrow, ncol, i)
+        plt.imshow(img_k14)
+        plt.title('K14 ')
+        plt.ylabel('%s' % k)
+
+        # DIC image
+        i += 1
+        plt.subplot(nrow, ncol, i)
+        plt.title('DIC')
+        plt.imshow(img_dic)
+
+        # boundary from raw points
+        i += 1
+        ax = plt.subplot(nrow, ncol, i)
+        # make sure the path is closed
+        x = list(xy_raw[:,0])
+        y = list(xy_raw[:,1])
+        x.append(x[0])
+        y.append(y[0])
+        xx = [ scale * val for val in x ]
+        yy = [ scale * val for val in y]
+        plt.plot(xx, yy, 'k', label='Boundary from file')
+        plt.scatter(scale * xy_interp[:,0], scale * xy_interp[:,1],
+                facecolors='none', edgecolors='b')
+        # ax.axis('equal')
+        ax.set_xlim(0, img_dic.shape[1] - 1)
+        ax.set_ylim(0, img_dic.shape[0] - 1)
+        plt.title('Form Factor %.3f' % (form_factor))
+        plt.gca().invert_yaxis()
+        
+        # power spectrum
+        i += 1
+        plt.subplot(nrow, ncol, i)
+        x = range(len(power_norm))
+        # logger.info('len(x) %d len(pwr) %d', len(x), len(power_norm))
+        # plt.plot(x[2:], power_norm[2:], 'k')
+        plt.plot(x[2:], power_ksq[2:], 'b')
+        # plt.xlabel('Frequency')
+        plt.ylabel('Power k^2')
+        plt.title('Spectral %.3f' % (sumpowerksq))
+
+    pdf.savefig()
+    plt.close()
+        
+    # figures
+    # invasion vs size
+    # invasion vs k14-sum
+    # invasion vs k14-mean
+    
+    veenalo = -0.5
+    veenahi = 3.5
+    plt.figure(figsize=(25,5))
+    plt.suptitle('%d organoids' % (nrow))
+    
+    #plt.subplot(131)
+    # plt.scatter(inv_list, sum3_list)
+    #for (x1, y1, a1) in zip(sumpowerksq_list, inv_list, org_list):
+    #    plt.text(x1, y1, a1, va='center', ha='center')
+    #plt.xlim(0,max(sumpowerksq_list))
+    #plt.ylim(veenalo,veenahi)
+    #plt.xlabel('Invasion, Spectral')
+    #plt.ylabel('Invasion, Veena')
+    
+    for (sp, xlist, xname) in zip( (131, 132, 133),
+        (sizefrac_list, k14sum_list, k14mean_list),
+        ('Fractional Area', 'K14 Sum', 'K14 Mean') ):
+    
+        plt.subplot(sp)
+        plt.xlim(0,max(xlist))
+        plt.ylim(0,max(sumpowerksq_list))
+        for (x1, y1, a1) in zip(xlist, sumpowerksq_list, ctn_list):
+            plt.text(x1, y1, a1, va='center', ha='center')
+        plt.xlabel(xname)
+        plt.ylabel('Invasion')
+        (r, pval) = pearsonr(xlist, sumpowerksq_list)
+        rsq = r*r
+        plt.title('Rsq = %.3f, pval = %.3g' % (rsq, pval))
+
+    pdf.savefig()
+    plt.close()
+    pdf.close()             
+
+    return(new_table)    
+
 def main():
     parser = argparse.ArgumentParser(description='Stack 2D images make a 3D rendering', epilog='', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--datafolder', help='input directory with all the data', required=True)
@@ -1412,6 +1684,7 @@ def main():
     parser.add_argument('--nfft', help='number of points of FFT', type=int, default=128, required=False)
     parser.add_argument('--outdir', help='output directory', default='output', required=False)
     parser.add_argument('--calculate', help='calculate everything', choices=['y','n'], required=False, default='n')
+    parser.add_argument('--invasionvsk14', help='calculate invasion vs. K14', choices=['y','n'], required=False, default='n')
     parser.add_argument('--thumbnails', help='make thumbnails', choices=['y','n'], required=False, default='n')
     parser.add_argument('--thermometers', help='make thumbnails', choices=['y','n'], required=False, default='n')
     parser.add_argument('--dim', help='dimension of data', choices=[2], type=int, required=False, default=2)
@@ -1450,6 +1723,7 @@ def main():
         combine_images(args.datafolder, args.outdir)
         return None
 
+
     if (not os.path.isdir(args.outdir)):
         logger.info('creating output directory %s', args.outdir)
         os.makedirs(args.outdir)
@@ -1457,6 +1731,11 @@ def main():
     #    subdirpath = os.path.join(args.outdir, subdir)
     #    if (not os.path.isdir(subdirpath)):
     #        os.makedirs(subdirpath)
+
+    if (args.invasionvsk14=='y'):
+        logger.info('calculating invasion vs. K14 ...')
+        result_dic = calc_inv_vs_k14(args)
+        return None
     
     picklefile = os.path.join(args.outdir, 'calculate.pkl')
     prot = cPickle.HIGHEST_PROTOCOL
