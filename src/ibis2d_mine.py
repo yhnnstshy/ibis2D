@@ -1447,9 +1447,10 @@ def read_image_pair(fullpath):
     if (xresolution != yresolution):
         logger.warn('%s bad resolution %s %s', fullpath, xresolution, yresolution)
     #scale = float(xresolution)
-    scale = eval("1.0*" + xresolution) # sometimes scalestr is 122093/62500
+    #scale = eval("1.0*" + xresolution) # sometimes scalestr is 122093/62500
     #Scale is determined by looking at the images
-    scale = 2.0
+    #scale = 2.0
+    scale = 1.95
     #logger.info('resolution x %s y %s x %s y %s scale %s scale %s', xtag, ytag, xresolution, yresolution, scalestr, str(scale))
     
     phototag = tags.get('Image PhotometricInterpretation', 'NA')
@@ -1508,7 +1509,7 @@ def calc_inv_vs_k14(args):
     
     organoids = ctn_list
     nrow = len(ctn_list)
-    ncol = 4
+    ncol = 3
 
     ff_list = [ ]
     sumpower_list = [ ]
@@ -1519,7 +1520,7 @@ def calc_inv_vs_k14(args):
     area_list = [ ]
     sizefrac_list = [ ]
 
-    plt.figure(figsize=(30, nrow * ncol))
+    plt.figure(figsize=(25, nrow * ncol))
     rownum = 0        
     #    for c in ctn_list:
     # for c in ['CTN005']:
@@ -1598,10 +1599,10 @@ def calc_inv_vs_k14(args):
         plt.ylabel('%s' % k)
 
         # DIC image
-        i += 1
-        plt.subplot(nrow, ncol, i)
-        plt.title('DIC')
-        plt.imshow(img_dic)
+        #i += 1
+        #plt.subplot(nrow, ncol, i)
+        #plt.title('DIC')
+        #plt.imshow(img_dic)
 
         # boundary from raw points
         i += 1
@@ -1614,9 +1615,9 @@ def calc_inv_vs_k14(args):
         xx = [ scale * val for val in x ]
         yy = [ scale * val for val in y]
         plt.plot(xx, yy, 'k', label='Boundary from file')
-        plt.scatter(scale * xy_interp[:,0], scale * xy_interp[:,1],
-                facecolors='none', edgecolors='b')
+        #plt.scatter(scale * xy_interp[:,0], scale * xy_interp[:,1], facecolors='none', edgecolors='b')
         # ax.axis('equal')
+        plt.imshow(img_dic, alpha=0.5)
         ax.set_xlim(0, img_dic.shape[1] - 1)
         ax.set_ylim(0, img_dic.shape[0] - 1)
         plt.title('Form Factor %.3f' % (form_factor))
@@ -1641,8 +1642,8 @@ def calc_inv_vs_k14(args):
     # invasion vs k14-sum
     # invasion vs k14-mean
     
-    veenalo = -0.5
-    veenahi = 3.5
+    #veenalo = -0.5
+    #veenahi = 3.5
     plt.figure(figsize=(25,5))
     plt.suptitle('%d organoids' % (nrow))
     
