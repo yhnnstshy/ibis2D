@@ -33,38 +33,17 @@
 \usepackage{verbatim}
 \usetikzlibrary{arrows,shapes}
 
-\title{Spectral Analysis}
+\title{Tumor Invasive Scores vs. K14 Expression}
 \author{Yohannes Tsehay}
-\title{Spectral Analysis}
-\institute{Johns Hopkins Medicine}
-\date{07/20/2018}
+%\title{Spectral Analysis}
+\institute{Joel Bader's Lab}
+\date{07/17/2018}
 \logo{\includegraphics[height=1.5cm]{hopkinslogo.jpg}}
+
 \begin{document}
 
-\begin{comment}
-:Title: Beamer arrows
-:Tags: Remember picture, Beamer, Physics & chemistry, Overlays
-:Use page: 3
-
-With PGF/TikZ version 1.09 and later, it is possible to draw paths between nodes across
-different pictures. This is a useful feature for presentations with the
-Beamer package. In this example I've combined the new PGF/TikZ's overlay feature
-with Beamer overlays. Download the PDF version to see the result.
-
-**Note.** This only works with PDFTeX, and you have to run PDFTeX twice.
-
-| Author: Kjell Magne Fauske
-
-\end{comment}
-
-
-% For every picture that defines or uses external nodes, you'll have to
-% apply the 'remember picture' style. To avoid some typing, we'll apply
-% the style to all pictures.
 \tikzstyle{every picture}+=[remember picture]
 
-% By default all math in TikZ nodes are set in inline mode. Change this to
-% displaystyle so that we don't get small fractions.
 \everymath{\displaystyle}
 
 \frame{\titlepage}
@@ -73,57 +52,293 @@ with Beamer overlays. Download the PDF version to see the result.
 \frametitle{Overview}
 
 \begin{itemize}
-    \item Transversal acceleration
-    \item Centripetal acceleration
+		\item Background Information
+		\item Objective
+		\item Methods
+		\item Results
+		\item Discussion
+		\item Future Directions
 \end{itemize}
 
 \end{frame}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-\frametitle{Template}
+\frametitle{Background}
 
-\tikzstyle{na} = [baseline=-.5ex]
-
-\begin{itemize}[<+-| alert@+>]
-    \item Coriolis acceleration
-        \tikz[na] \node[coordinate] (n1) {};
+\begin{itemize}
+		\item Metastasis is one of the main determinants of patient prognosis 
+		\item Mortality is often due to systemic spread of tumor and not in situ proliferation
+		\begin {Example}
+		5-year survival rate for invasive breast cancer at diagnosis is:
+		\begin {itemize}
+	\item 99\% for patient with \alert{local tumors}
+	\item 85\% for patients with \alert{regional spread}
+	\item 26\% for those with \alert{tumors that have spread to distance organs} \cite{tarver2012cancer}
+		\end {itemize}
+		\end {Example}
+		\item Currently, the molecular mechanism of metastasis is not well understood
+		\item Neoplastic drug interventions mostly target proliferation, not metastatic transformation
 \end{itemize}
 
-% Below we mix an ordinary equation with TikZ nodes. Note that we have to
-% adjust the baseline of the nodes to get proper alignment with the rest of
-% the equation.
-\begin{equation*}
-\vec{a}_p = \vec{a}_o+\frac{{}^bd^2}{dt^2}\vec{r} +
-        \tikz[baseline]{
-            \node[fill=blue!20,anchor=base] (t1)
-            {$ 2\vec{\omega}_{ib}\times\frac{{}^bd}{dt}\vec{r}$};
-        } +
-        \tikz[baseline]{
-            \node[fill=red!20, ellipse,anchor=base] (t2)
-            {$\vec{\alpha}_{ib}\times\vec{r}$};
-        } +
-        \tikz[baseline]{
-            \node[fill=green!20,anchor=base] (t3)
-            {$\vec{\omega}_{ib}\times(\vec{\omega}_{ib}\times\vec{r})$};
-        }
-\end{equation*}
-
-\begin{itemize}[<+-| alert@+>]
-    \item Transversal acceleration
-        \tikz[na]\node [coordinate] (n2) {};
-    \item Centripetal acceleration
-        \tikz[na]\node [coordinate] (n3) {};
-\end{itemize}
-
-% Now it's time to draw some edges between the global nodes. Note that we
-% have to apply the 'overlay' style.
-\begin{tikzpicture}[overlay]
-        \path[->]<1-> (n1) edge [bend left] (t1);
-        \path[->]<2-> (n2) edge [bend right] (t2);
-        \path[->]<3-> (n3) edge [out=0, in=-90] (t3);
-\end{tikzpicture}
 \end{frame}
+
+\begin{frame}
+	\frametitle{Quantifying the Invasive Potential of Tumors}
+	\begin{itemize}
+		\item Why would we need to make a system that quantifies the invasive potential of tumors?
+		\begin{itemize}
+				\item Quantitative phenotypes are more amenable to systemic analysis
+				\item They can be used in population genetics methods, where genetic variations and invasive potential of tumors can be studied by directly perturbing candidate genes
+				\item Such studies can lead to the discovery of new drugs for cancer therapy which can ultimately have a positive impact on the poor prognosis seen in patients with metastatic carcinoma 		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Related Research Work and Current Developments}
+	\begin{itemize}
+			\item A quantitative model to study and characterize metastasis has yet to be developed
+			\item \cite{shamir2014twist1} challenge the epithelial-to-mesenchymal transition requirement for metastasis, and instead, provide evidence in support of a model based on Twist1 induced dissemination of cytokeratin positive epithelial cells
+			\item \cite{cheung2016polyclonal} demonstrated that tumor cells can invade and metastasize in clusters challenging the single-cell/single-metastasis model
+			\item They further study how Keratin 14, a known molecular biomarker for metastasis, expressing cells intiate and complete the metastatic process 
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Project Objective}
+		The first aim of the project will be to test the hypothesis that K14 is directly correlated with invasiveness versus the alternative hypothesis that organoid size drives both K14 expression and invasion 
+\end{frame}
+
+\begin{frame}
+	\frametitle{Our Data}
+	\begin{itemize}
+			\item MMTV-PyMT transgenic mice were be used to produce a supply of organoids
+			\item Tumors were removed from 4 mice and a total of 90 - 150 small and large organoids were generated per tumor ($\approx$ 300 organoids in total per tumor)
+			\item The organoids were imaged using differential interference contrast (DIC) microscopy
+			\item The images were manually traced using \alert{$ImageJ$} to define organoid boundaries
+			\item corresponding K14 images are available
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Our Computer Model (Spectral Power)}
+	\begin{itemize}
+		\item the manually traced boundary is defined by a pair of points \(\{x_v, y_v\}\) for $p \in [0, P-1]$, where $P$ is the total number of points
+		\item First the overall length $L$ was calculated
+		\item $L = \sum_{v=1}^{V-1} \sqrt{(x_v - x_{v-1})^2 + (y_v - y_{v-1})^2}$
+		\item Next, an equally spaced grid was defined with distance $L/M$ between adjacent points, where $M=128$
+		\item Then, linear interpolation was used to generate a new boundary with equally spaced points \(\{x_j, y_j\}\), where $j \in \{0,1,...,M-1\}$  
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\begin{itemize}
+			\item Then, a fast Fourier transform on the newly generated boundary is performed according to:
+			\newline
+			$\hat{x}_k = \sum_{j=0}^{M-1} e^{-2\pi ijk/M} x_j$ 
+			\newline
+			$\hat{y}_k = \sum_{j=0}^{M-1} e^{-2\pi ijk/M} y_j$ 
+			\item where $k \in \{0,1,...,M/2+1\}$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\begin{itemize}
+			\item The spectral power $P_k$ is given by:
+			\newline
+			$P_k = |\hat{x}_k|^2 + |\hat{y}_k|^2$
+			\newline
+			\item where $k \in \{0,1,...,M/2+1\}$
+			\item $P_0$ is the center and $P_1$ is used to normalize the total power given by:
+			\newline
+			$P_{total} = \sum_{k=2}^{M/2+1} P_k/P_1$
+			\item this produces a spectral power that is scale invariant in addition to being transilation and rotation invariant. 
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\begin{itemize}
+			\item Means and parametric derivative transforms are estimated
+			\item This is done to smooth out artifacts in the boundary 
+			\item The transform for $\bar{x}_{j\prime} \equiv (x_{j\prime+1/2} + x_{j\prime-1/2})/2$ is: 
+			\newline
+			$\hat{\bar{x}}_k = \cos(\pi k/M)\hat{x}$ 
+			\newline
+			\item The transform for $\dot{x}$ is: 
+			\newline
+			$\hat{\dot{x}} = (iM/\pi)\sin(\pi k/M)\hat{x}$
+			\item Therefore, the final weighted spectral power becomes:
+			\newline
+			$w \equiv \sum_{k=2}^{M/2} (M/\pi)^2 \sin^2(\pi k/M) \cos^2(\pi k/M) P_k/P_1$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\begin{figure}
+		\centering
+		\includegraphics[width=7cm, height=8cm]{Image1}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Analysis}
+	\begin{itemize}
+			\item Features that we considered to compare against our model include the following:
+			\begin{itemize}
+					\item Fractional area of the organoid 
+					\item K14 Mean
+					\item K14 Sum of pixels intensities in the periphery
+					\item K14 Sum of pixels intensities in the center
+					\item K14 total pixel intensity sum 
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{An Efficient Way to Get Peripheral Pixels}
+	\begin{enumerate}
+			\item Generate a mask from the boundary
+			\item make a disk to be used as a kernel with which to convolve the mask
+			\begin{Example}
+				A disk with a radius of 3 is:
+				\newline
+				$k = \begin{bmatrix}
+					0 & 0 & 0 & 1 & 0 & 0 & 0 \\
+					0 & 1 & 1 & 1 & 1 & 1 & 0 \\
+					0 & 1 & 1 & 1 & 1 & 1 & 0 \\
+					1 & 1 & 1 & 1 & 1 & 1 & 1 \\
+					0 & 1 & 1 & 1 & 1 & 1 & 0 \\
+					0 & 1 & 1 & 1 & 1 & 1 & 0 \\
+					0 & 0 & 0 & 1 & 0 & 0 & 0
+				\end{bmatrix}$
+			\end{Example}
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}
+	\begin{figure}
+		\centering
+		\includegraphics[width=4cm, height=4cm]{Image4}
+		\includegraphics[width=4cm, height=4cm]{Image5}
+		\includegraphics[width=4cm, height=4cm]{Image6}
+		\begin{columns}
+		\column{0.5\textwidth}
+			radius, $r= 20$. \newline $pixel size \sim 0.5 \mu$ 
+		\end{columns}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\begin{figure}
+		\frametitle{Small Organoids}
+		\centering
+		\includegraphics[width=10cm, height=3cm]{Image2}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\begin{figure}
+		\frametitle{Large Organoids}
+		\centering
+		\includegraphics[width=10cm, height=3cm]{Image3}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\centering
+	\resizebox{\textwidth}{!}{
+	 \begin{tabular}{||c c c c c c c||}
+		 \hline
+		 Organoids (mouse\# Size) & 1 Small & 1 Large & 2 Small & 2 Large & 3 Small & 3 Large \\ [0.5ex]
+		 \hline\hline
+		 Fractional Areav($r^2$) & \textbf{0.401} & 0.211 & \textbf{0.518} & 0.239 & \textbf{0.493} & 0.110 \\
+		 \hline
+		 Peripheral K14($r^2$) & 0.370 & \textbf{0.379} & 0.464 & \textbf{0.339} & 0.333 & \textbf{0.179} \\
+		 \hline
+		 Centeral K14($r^2$) & 0.174 & 0.187 & 0.337 & 0.093 & 0.251 & 0.013 \\
+		 \hline
+		 Total K14($r^2$) & 0.204 & 0.205 & 0.361 & 0.110 & 0.264 & 0.019 \\
+		 \hline
+		 K14 Mean($r^2$) & 0.057 & 0.011 & 0.023 & 0.239 & 0.011 & 0.023 \\ [1ex]
+		 \hline
+	\end{tabular}
+	}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Discussion}
+	\begin{itemize}
+			\item Looking at K14 expression in the periphery of the organoids holds some promise
+			\item K14 expression in the center of the organoids correlates less with spectral score than peripheral K14 expression 
+			\item K14 Mean doesn't seem to contribute much
+			\item Using peripheral K14 expression seems to have more significance for large organoids 
+			\item Fractional area and peripheral K14 expression give comparable $r^2$ values
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Future Directions}
+	\begin{itemize}
+			\item Mouse \#4 data seems to be slightly off, so fix it
+			\item Establish statistical significance for our hypothesis 
+			\item Apply our model on human organoids generated from breast tumors 
+			\newline
+			...
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\centering
+	Thank You
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\begin{frame}
+%\frametitle{Template}
+%
+%\tikzstyle{na} = [baseline=-.5ex]
+%
+%\begin{itemize}[<+-| alert@+>]
+%    \item Coriolis acceleration
+%        \tikz[na] \node[coordinate] (n1) {};
+%\end{itemize}
+%
+%% Below we mix an ordinary equation with TikZ nodes. Note that we have to
+%% adjust the baseline of the nodes to get proper alignment with the rest of
+%% the equation.
+%\begin{equation*}
+%\vec{a}_p = \vec{a}_o+\frac{{}^bd^2}{dt^2}\vec{r} +
+%        \tikz[baseline]{
+%            \node[fill=blue!20,anchor=base] (t1)
+%            {$ 2\vec{\omega}_{ib}\times\frac{{}^bd}{dt}\vec{r}$};
+%        } +
+%        \tikz[baseline]{
+%            \node[fill=red!20, ellipse,anchor=base] (t2)
+%            {$\vec{\alpha}_{ib}\times\vec{r}$};
+%        } +
+%        \tikz[baseline]{
+%            \node[fill=green!20,anchor=base] (t3)
+%            {$\vec{\omega}_{ib}\times(\vec{\omega}_{ib}\times\vec{r})$};
+%        }
+%\end{equation*}
+%
+%\begin{itemize}[<+-| alert@+>]
+%    \item Transversal acceleration
+%        \tikz[na]\node [coordinate] (n2) {};
+%    \item Centripetal acceleration
+%        \tikz[na]\node [coordinate] (n3) {};
+%\end{itemize}
+%
+%% Now it's time to draw some edges between the global nodes. Note that we
+%% have to apply the 'overlay' style.
+%\begin{tikzpicture}[overlay]
+%        \path[->]<1-> (n1) edge [bend left] (t1);
+%        \path[->]<2-> (n2) edge [bend right] (t2);
+%        \path[->]<3-> (n3) edge [out=0, in=-90] (t3);
+%\end{tikzpicture}
+%\end{frame}
+
+\bibliography{refs}
+\bibliographystyle{apalike}
 
 \end{document}

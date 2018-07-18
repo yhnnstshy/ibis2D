@@ -34,7 +34,11 @@ import statsmodels.api as sm
 
 from PIL import Image, ImageDraw
 
+from scipy import ndimage
+from skimage.morphology import disk, dilation, watershed, closing, skeletonize, medial_axis
+
 import logging
+
 logging.basicConfig(format='%(levelname)s %(name)s.%(funcName)s: %(message)s')
 logger = logging.getLogger('stack_images')
 logger.setLevel(logging.INFO)
@@ -353,8 +357,8 @@ def rgb2gray(img_rgb):
     assert(img_rgb.shape[2] == 3), 'bad rgb dimension'
     img_gray = img_rgb[:,:,0] + img_rgb[:,:,1] + img_rgb[:,:,2]
     img_gray = img_gray / 3.0
-    logger.info('rgb shape %s converted to gray shape %s',
-                str(img_rgb.shape), str(img_gray.shape))
+    #logger.info('rgb shape %s converted to gray shape %s',
+    #           str(img_rgb.shape), str(img_gray.shape))
     #for i in range(10):
     #    for j in range(10):
     #        logger.info('%d %d %f %f %f %f',
@@ -396,6 +400,23 @@ def create_boundary(img_orig, points, scale, fillstr):
     img_boundary[:,:,...] = 0
     img_boundary[boundary_np] = 1
     return(img_boundary, boundary_np)
+
+def get_edge_pixles(img, xy, scale, distance=10):
+    img = rgb2gray(img)
+    (mask, array) = create_boundary(img, xy, scale, 'fill')
+    #kernel
+    k = disk(distance)
+    #convolve mask and normalize output
+    mask_c=ndimage.convolve(mask, k)
+    mask_c = mask_c/(np.amax(mask_c))
+    #create new mask for edge pixels
+    edge_mask = np.zeros(mask.shape)
+    #remask and threshold to get edge pixels
+    edge_mask[(mask == 1) & (mask_c < 1)] = 1
+    #create new mask for center pixels
+    center_mask = np.zeros(mask.shape)
+    center_mask[mask_c == 1] = 1
+    return (edge_mask, center_mask)
 
 def get_pixelsummary(arr):
     ret = dict()
@@ -1478,14 +1499,14 @@ def calc_inv_vs_k14(args):
     nfft = args.nfft
     outdir = args.outdir
     
-    filenames = os.listdir(orig_dir)
+    filenames = os.listdir(xy_dir)
     new_table = dict()
     org_id = [f.split('.')[0] for f in filenames]
     for i in org_id:
         new_table[i] = dict()
     new_fields = ['invasion_spectral', 'invasion_ff',
                   'size_area', 'size_perimeter', 'size_npixel', 'size_frac',
-                  'k14_mean', 'k14_sum',
+                  'k14_mean', 'k14_sum', 'k14_sum_edge', 'k14_sum_center',
                   'tag_photometric', 'tag_color', 'tag_scale']
     for k in new_table:
         for f in new_fields:
@@ -1516,6 +1537,8 @@ def calc_inv_vs_k14(args):
     sumpowerksq_list = [ ]
     k14mean_list = [ ]
     k14sum_list = [ ]
+    k14sum_edge_list = [ ]
+    k14sum_center_list = [ ]
     k14veena_list = [ ]
     area_list = [ ]
     sizefrac_list = [ ]
@@ -1548,6 +1571,13 @@ def calc_inv_vs_k14(args):
         (img_fill, fill_np) = create_boundary(img_k14, xy_interp, scale, 'fill')
         pixels_inside = img_k14[ fill_np > 0 ]
         pixels_outside = img_k14[ fill_np == 0 ]
+
+        # extract k14 intensity from image for peripheral and central pixels
+        (edge_mask, center_mask) = get_edge_pixles(img_k14, xy_interp, scale)
+        pixels_inside_peripheral_mask = img_k14[edge_mask > 0]
+        pixels_inside_central_mask = img_k14[center_mask > 0]
+        k14sum_edge = np.sum(pixels_inside_peripheral_mask.ravel())
+        k14sum_center = np.sum(pixels_inside_central_mask.ravel())
         
         k14sum = np.sum(pixels_inside.ravel())
         k14mean = np.mean(pixels_inside.ravel())
@@ -1557,8 +1587,12 @@ def calc_inv_vs_k14(args):
         if (tag_photometric == '1'):
             k14mean = 255.0 - k14mean
             k14sum = (255.0 * ninside) - k14sum
+            k14sum_edge = (255.0 * ninside) - k14sum_edge
+            k14sum_center = (255.0 * ninside) - k14sum_center
             # logger.info('-> %d pixels, sum = %f, mean = %f', ninside, k14sum, k14mean)
         k14sum = k14sum / float(ntotal * 255)
+        k14sum_edge = k14sum_edge / float(ntotal * 255)
+        k14sum_center = k14sum_center / float(ntotal * 255)
         k14mean = k14mean / 255.0
         # logger.info('k14 mean %f, k14sum normalized %f for %d total pixels', k14mean, k14sum, ntotal)            
 
@@ -1574,6 +1608,8 @@ def calc_inv_vs_k14(args):
         new_table[k]['size_npixel'] = str(size_npixel)
         new_table[k]['size_frac'] = str(size_frac)
         new_table[k]['k14_sum'] = str(k14sum)
+        new_table[k]['k14_sum_edge'] = str(k14sum_edge)
+        new_table[k]['k14_sum_center'] = str(k14sum_center)
         new_table[k]['k14_mean'] = str(k14mean)
         new_table[k]['tag_photometric'] = tag_photometric
         new_table[k]['tag_color'] = tag_color
@@ -1584,6 +1620,8 @@ def calc_inv_vs_k14(args):
         sumpowerksq_list.append(sumpowerksq)
         k14mean_list.append(k14mean)
         k14sum_list.append(k14sum)
+        k14sum_edge_list.append(k14sum_edge)
+        k14sum_center_list.append(k14sum_center)
         area_list.append(size_area)
         sizefrac_list.append(size_frac)
         
@@ -1594,7 +1632,7 @@ def calc_inv_vs_k14(args):
         # K14 image
         i += 1
         plt.subplot(nrow, ncol, i)
-        plt.imshow(img_k14)
+        plt.imshow(img_k14, aspect='auto')
         plt.title('K14 ')
         plt.ylabel('%s' % k)
 
@@ -1617,9 +1655,10 @@ def calc_inv_vs_k14(args):
         plt.plot(xx, yy, 'k', label='Boundary from file')
         #plt.scatter(scale * xy_interp[:,0], scale * xy_interp[:,1], facecolors='none', edgecolors='b')
         # ax.axis('equal')
-        plt.imshow(img_dic, alpha=0.5)
+        plt.imshow(img_dic, alpha=0.5, aspect='auto')
         ax.set_xlim(0, img_dic.shape[1] - 1)
         ax.set_ylim(0, img_dic.shape[0] - 1)
+        ax.set_aspect('auto')
         plt.title('Form Factor %.3f' % (form_factor))
         plt.gca().invert_yaxis()
         
@@ -1637,28 +1676,12 @@ def calc_inv_vs_k14(args):
     pdf.savefig()
     plt.close()
         
-    # figures
-    # invasion vs size
-    # invasion vs k14-sum
-    # invasion vs k14-mean
-    
-    #veenalo = -0.5
-    #veenahi = 3.5
     plt.figure(figsize=(25,5))
     plt.suptitle('%d organoids' % (nrow))
     
-    #plt.subplot(131)
-    # plt.scatter(inv_list, sum3_list)
-    #for (x1, y1, a1) in zip(sumpowerksq_list, inv_list, org_list):
-    #    plt.text(x1, y1, a1, va='center', ha='center')
-    #plt.xlim(0,max(sumpowerksq_list))
-    #plt.ylim(veenalo,veenahi)
-    #plt.xlabel('Invasion, Spectral')
-    #plt.ylabel('Invasion, Veena')
-    
-    for (sp, xlist, xname) in zip( (131, 132, 133),
-        (sizefrac_list, k14sum_list, k14mean_list),
-        ('Fractional Area', 'K14 Sum', 'K14 Mean') ):
+    for (sp, xlist, xname) in zip( (151, 152, 153, 154, 155),
+        (sizefrac_list, k14sum_list, k14sum_edge_list, k14sum_center_list, k14mean_list),
+        ('Fractional Area', 'K14 Sum', 'K14 Sum Peripheral Pixels', 'K14 Sum Centeral Pixels', 'K14 Mean') ):
     
         plt.subplot(sp)
         plt.xlim(0,max(xlist))
@@ -1693,27 +1716,6 @@ def main():
     parser.add_argument('--filenumber', help='filenumber to test', type=str, required=False, default=1)
     parser.add_argument('--combineimgs', help='combine DIC and K14 images', choices=['y','n'], required=False, default='n')
     args = parser.parse_args()
-
-    #data_folder = '../data'
-    #output_folder = os.path.join(data_folder, 'Images')
-
-    #combine_images(data_folder, output_folder)
-
-
-    #return None
-
-    #args.datafolder = '..'
-    #args.images = '/Users/ytsehay/work/tmp/data/Images'
-    #args.coords ='/Users/ytsehay/work/tmp/data/XY'
-    #args.outdir = os.path.join(args.datafolder, 'run')
-    #args.orgnum = '1'
-    #args.orgsize = 'large'
-    #args.daynum = '5'
-
-    #args.calculate = 'y'
-    #args.thumbnails = 'y'
-    #args.thermometers = 'y'
-
 
 
     if(args.test == 'y'):
