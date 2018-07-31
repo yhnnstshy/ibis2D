@@ -1501,7 +1501,7 @@ def calc_inv_vs_k14(args):
     
     filenames = os.listdir(xy_dir)
     new_table = dict()
-    org_id = [f.split('.')[0] for f in filenames]
+    org_id = [f.split('.')[0] for f in filenames if not f.startswith('.')]
     for i in org_id:
         new_table[i] = dict()
     new_fields = ['invasion_spectral', 'invasion_ff',
@@ -1517,6 +1517,7 @@ def calc_inv_vs_k14(args):
 
     ctn_list = new_table.keys()
     ctn_list.sort(key=float)
+    #ctn_list.sort()
 
     k_vector = np.arange(1 + (nfft/2)) # since rfft uses only half the range
     k_sq = k_vector * k_vector # element multiply
@@ -1632,7 +1633,7 @@ def calc_inv_vs_k14(args):
         # K14 image
         i += 1
         plt.subplot(nrow, ncol, i)
-        plt.imshow(img_k14, aspect='auto')
+        plt.imshow(img_k14)
         plt.title('K14 ')
         plt.ylabel('%s' % k)
 
@@ -1655,10 +1656,10 @@ def calc_inv_vs_k14(args):
         plt.plot(xx, yy, 'k', label='Boundary from file')
         #plt.scatter(scale * xy_interp[:,0], scale * xy_interp[:,1], facecolors='none', edgecolors='b')
         # ax.axis('equal')
-        plt.imshow(img_dic, alpha=0.5, aspect='auto')
+        plt.imshow(img_dic, alpha=0.5)
         ax.set_xlim(0, img_dic.shape[1] - 1)
         ax.set_ylim(0, img_dic.shape[0] - 1)
-        ax.set_aspect('auto')
+        #ax.set_aspect('auto')
         plt.title('Form Factor %.3f' % (form_factor))
         plt.gca().invert_yaxis()
         
