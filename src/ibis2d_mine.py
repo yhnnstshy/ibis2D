@@ -1701,10 +1701,10 @@ def calc_inv_vs_k14(args):
 
     textFile = open(os.path.join(outdir, outdir + '.txt'), 'w')
 
-    textFile.write('Invasion\tK14 Sum Peripheral Pixels\tK14 Sum Central Pixels\tK14 Total Sum\tK14 Mean\n')
+    textFile.write('Invasion\tFractional Area\tK14 Sum Peripheral Pixels\tK14 Sum Central Pixels\tK14 Total Sum\tK14 Mean\n')
 
     for k in ctn_list:
-        textFile.write("%s\t%s\t%s\t%s\t%s\n" %(new_table[k]['invasion_spectral'], new_table[k]['k14_sum_edge'], new_table[k]['k14_sum_center'], new_table[k]['k14_sum'], new_table[k]['k14_mean']))
+        textFile.write("%s\t%s\t%s\t%s\t%s\t%s\n" %(new_table[k]['invasion_spectral'], new_table[k]['size_frac'], new_table[k]['k14_sum_edge'], new_table[k]['k14_sum_center'], new_table[k]['k14_sum'], new_table[k]['k14_mean']))
 
     textFile.close()
     
