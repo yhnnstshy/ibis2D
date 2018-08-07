@@ -1512,7 +1512,7 @@ def calc_inv_vs_k14(args):
         for f in new_fields:
             new_table[k][f] = '-1'
             
-    plotfile = os.path.join(outdir, 'organoids.pdf')
+    plotfile = os.path.join(outdir, outdir + '.pdf')
     pdf = PdfPages(plotfile)
 
     ctn_list = new_table.keys()
@@ -1679,7 +1679,7 @@ def calc_inv_vs_k14(args):
         
     plt.figure(figsize=(25,5))
     plt.suptitle('%d organoids' % (nrow))
-    
+
     for (sp, xlist, xname) in zip( (151, 152, 153, 154, 155),
         (sizefrac_list, k14sum_list, k14sum_edge_list, k14sum_center_list, k14mean_list),
         ('Fractional Area', 'K14 Sum', 'K14 Sum Peripheral Pixels', 'K14 Sum Centeral Pixels', 'K14 Mean') ):
@@ -1699,6 +1699,15 @@ def calc_inv_vs_k14(args):
     plt.close()
     pdf.close()             
 
+    textFile = open(os.path.join(outdir, outdir + '.txt'), 'w')
+
+    textFile.write('Invasion\tK14 Sum Peripheral Pixels\tK14 Sum Central Pixels\tK14 Total Sum\tK14 Mean\n')
+
+    for k in ctn_list:
+        textFile.write("%s\t%s\t%s\t%s\t%s\n" %(new_table[k]['invasion_spectral'], new_table[k]['k14_sum_edge'], new_table[k]['k14_sum_center'], new_table[k]['k14_sum'], new_table[k]['k14_mean']))
+
+    textFile.close()
+    
     return(new_table)    
 
 def main():

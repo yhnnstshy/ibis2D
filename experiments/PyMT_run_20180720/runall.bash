@@ -25,4 +25,9 @@ do
 	done
 done
 
+if [ ${RUN} == 'invasionvsk14' ];
+then
+	python /Users/ytsehay/work/project/src/generate_summary_plots.py --indir "." --outdir "."
+fi
+
 deactivate
