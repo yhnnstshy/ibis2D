@@ -37,6 +37,9 @@ from PIL import Image, ImageDraw
 from scipy import ndimage
 from skimage.morphology import disk, dilation, watershed, closing, skeletonize, medial_axis
 
+
+from sklearn.cluster import KMeans
+
 import logging
 
 logging.basicConfig(format='%(levelname)s %(name)s.%(funcName)s: %(message)s')
@@ -1701,14 +1704,104 @@ def calc_inv_vs_k14(args):
 
     textFile = open(os.path.join(outdir, outdir + '.txt'), 'w')
 
-    textFile.write('Invasion\tFractional Area\tK14 Sum Peripheral Pixels\tK14 Sum Central Pixels\tK14 Total Sum\tK14 Mean\n')
+    textFile.write('ID\tInvasion\tFractional Area\tK14 Sum Peripheral Pixels\tK14 Sum Central Pixels\tK14 Total Sum\tK14 Mean\n')
 
     for k in ctn_list:
-        textFile.write("%s\t%s\t%s\t%s\t%s\t%s\n" %(new_table[k]['invasion_spectral'], new_table[k]['size_frac'], new_table[k]['k14_sum_edge'], new_table[k]['k14_sum_center'], new_table[k]['k14_sum'], new_table[k]['k14_mean']))
+        textFile.write("%s\t%s\t%s\t%s\t%s\t%s\t%s\n" %(k, new_table[k]['invasion_spectral'], new_table[k]['size_frac'], new_table[k]['k14_sum_edge'], new_table[k]['k14_sum_center'], new_table[k]['k14_sum'], new_table[k]['k14_mean']))
 
     textFile.close()
     
     return(new_table)    
+
+
+def cluster(args):
+    #K Means initializer
+    num_clusters = 6
+    kms = KMeans(n_clusters=num_clusters, random_state=0)
+    #boundary scale
+    scale = 150
+
+    boundary = dict()
+    spectral_power = dict()
+
+    orig_dir = args.images
+    xy_dir = args.coords
+    nfft = args.nfft
+    outdir = args.outdir
+    
+    filenames = os.listdir(xy_dir)
+    org_id = [f.split('.')[0] for f in filenames if not f.startswith('.')]
+
+    k_vector = np.arange(1 + (nfft/2)) # since rfft uses only half the range
+    k_sq = k_vector * k_vector # element multiply
+
+    fac = 2.0 * math.pi / float(nfft)
+    facsq = fac * fac
+    smooth = np.exp(-facsq * k_sq)
+    
+    for k in org_id:
+        xy_file = os.path.join(xy_dir, k + '.txt')
+        (xy_raw, xy_interp, xy_hat, tot_length, area, form_factor, power_norm) = xyfile_to_spectrum(xy_file, nfft)
+        power_norm = power_norm * smooth
+        power_ksq = power_norm * k_sq
+        sumpower = sum(power_norm[2:])
+        sumpowerksq = sum(power_ksq[2:])
+
+        boundary[k] = xy_interp
+        spectral_power[k] = np.array(power_ksq[2:]).astype(np.float)
+
+    cls = kms.fit(spectral_power.values())
+
+    diam = 3.0 # typical diameter for an organoid scaled to unit circle
+    HEIGHT_OVER_WIDTH = 3.0 / 4.0
+    FIGSIZE = (12, 9)
+    
+    # order by class
+    classes = dict()
+    number_of_features = spectral_power[k].size
+    for c in range(0, num_clusters):
+        classes[str(c)] = [ k for k in boundary.keys() if (cls.predict(spectral_power[k].reshape(1,number_of_features)) == c)]
+
+    byname = sorted(boundary.keys())
+    tups = [ (cls.predict(spectral_power[k].reshape(1,number_of_features)), k) for k in byname ]
+    tups = sorted(tups)
+    byclass = [ t[1] for t in tups ]
+
+    class_tot = len(classes.keys())
+    colors = mpcm.rainbow(np.linspace(0,1,class_tot))
+    class2color = dict(zip(classes.keys(), colors))
+
+    nside = int(math.ceil(math.sqrt(class_tot)))
+    dh = diam
+    dw = diam / HEIGHT_OVER_WIDTH
+
+    plt.figure(figsize=FIGSIZE)
+    plt.title('Clusters')
+    plt.gca().set_aspect('equal')
+    axes = plt.gca()
+    myclass = 0
+    for c in range(0, len(classes.keys())):
+        cnt = 0
+        cluster_length = len(classes[str(c)])
+        nside = int(math.ceil(math.sqrt(cluster_length)))
+        for (k) in classes[str(c)]:
+            pts = boundary[k]
+            row = cnt // nside
+            col = (cnt % nside) + myclass
+            dx = col * dw
+            dy = row * dh
+            newx = pts[:,0]/scale + dx
+            newy = pts[:,1]/scale + dy
+            xy = zip(newx, newy)
+            axes.add_patch(Polygon(xy, closed=True, facecolor=class2color[str(c)], edgecolor='none') )
+            cnt = cnt + 1
+        myclass = myclass + nside
+    axes.autoscale_view()    
+    plt.gca().invert_yaxis()
+    plt.axis('off')
+    plt.savefig(os.path.join(outdir, 'cluster.pdf'))
+    plt.close()
+    return None
 
 def main():
     parser = argparse.ArgumentParser(description='Stack 2D images make a 3D rendering', epilog='', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -1719,6 +1812,7 @@ def main():
     parser.add_argument('--outdir', help='output directory', default='output', required=False)
     parser.add_argument('--calculate', help='calculate everything', choices=['y','n'], required=False, default='n')
     parser.add_argument('--invasionvsk14', help='calculate invasion vs. K14', choices=['y','n'], required=False, default='n')
+    parser.add_argument('--cluster', help='cluster organoids based on their spectral power', choices=['y','n'], required=False, default='n')
     parser.add_argument('--thumbnails', help='make thumbnails', choices=['y','n'], required=False, default='n')
     parser.add_argument('--thermometers', help='make thumbnails', choices=['y','n'], required=False, default='n')
     parser.add_argument('--dim', help='dimension of data', choices=[2], type=int, required=False, default=2)
@@ -1744,6 +1838,11 @@ def main():
     #    subdirpath = os.path.join(args.outdir, subdir)
     #    if (not os.path.isdir(subdirpath)):
     #        os.makedirs(subdirpath)
+
+    if (args.cluster=='y'):
+        logger.info('Clustering organoids ...')
+        result_dic = cluster(args)
+        return None
 
     if (args.invasionvsk14=='y'):
         logger.info('calculating invasion vs. K14 ...')
