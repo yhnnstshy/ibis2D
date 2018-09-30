@@ -8,6 +8,11 @@ mouse_data_files = [
     '../experiments/PyMT_Final/mouse_2_Day5/mouse_2_Day5.txt',
     '../experiments/PyMT_Final/mouse_3_Day5/mouse_3_Day5.txt']
 
+mouse_data_files = [
+    '../experiments/C31T_Final/mouse_1_Day5/mouse_1_Day5.txt',
+    '../experiments/C31T_Final/mouse_2_Day5/mouse_2_Day5.txt',
+    '../experiments/C31T_Final/mouse_3_Day5/mouse_3_Day5.txt',
+    '../experiments/C31T_Final/mouse_4_Day5/mouse_4_Day5.txt']
 
 def parse_data_summary(file_location):
     data_table = []
@@ -106,7 +111,7 @@ def analysis_loop(data_table):
                 plt.ylabel(headers[1], fontsize=16)
 
                 plt.tight_layout()
-                plt.show()
+                # plt.show()
 
     np.set_printoptions(precision=2, suppress=True)
     print r2_matrix
