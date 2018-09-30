@@ -24,7 +24,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \documentclass{beamer} %
-\usetheme{Boadilla}
+% \usetheme{Boadilla}
 \usepackage[latin1]{inputenc}
 \usefonttheme{professionalfonts}
 \usepackage{times}
@@ -33,12 +33,43 @@
 \usepackage{verbatim}
 \usetikzlibrary{arrows,shapes}
 
-\title{Tumor Invasive Scores vs. K14 Expression}
-\author{Yohannes Tsehay}
+
+\usetheme{Warsaw}
+
+\setbeamercolor{normal text}{fg=yellow,bg=black!90}
+\setbeamercolor{structure}{fg=yellow}
+
+\setbeamercolor{alerted text}{fg=red!85!black}
+
+\setbeamercolor{item projected}{use=item,fg=black,bg=item.fg!35}
+
+\setbeamercolor*{palette primary}{use=structure,fg=structure.fg}
+\setbeamercolor*{palette secondary}{use=structure,fg=structure.fg!95!black}
+\setbeamercolor*{palette tertiary}{use=structure,fg=structure.fg!90!black}
+\setbeamercolor*{palette quaternary}{use=structure,fg=structure.fg!95!black,bg=black!80}
+
+\setbeamercolor*{framesubtitle}{fg=green}
+
+\setbeamercolor*{block title}{parent=structure,bg=black!60}
+\setbeamercolor*{block body}{fg=black,bg=black!10}
+\setbeamercolor*{block title alerted}{parent=alerted text,bg=black!15}
+\setbeamercolor*{block title example}{parent=example text,bg=black!15}
+
+\useoutertheme{split}
+\setbeamertemplate{navigation symbols}{}
+
+\title{Membrane-localized Keratin-14 \\ promotes invasion}
+\author{Yohanes Tsehay \\ \& Andrei Kucharavy}
 %\title{Spectral Analysis}
 \institute{Joel Bader's Lab}
-\date{07/17/2018}
-\logo{\includegraphics[height=1.5cm]{hopkinslogo.jpg}}
+\date{10/04/2018}
+%\logo{\includegraphics[height=1.5cm]{hopkinslogo.jpg}}
+%\logo{\includegraphics[height=1.5cm]{ctd2_overall.png}}
+\titlegraphic{%
+   \includegraphics[width=5cm]{Hopkins_logo_2.png}\hspace*{2.75cm}~%
+   \includegraphics[width=3cm]{ctd2_overall.png}\hspace*{1.75cm}%
+   }
+
 
 \begin{document}
 
@@ -52,7 +83,7 @@
 \frametitle{Overview}
 
 \begin{itemize}
-		\item Background Information
+		% \item Background Information
 		\item Objective
 		\item Methods
 		\item Results
@@ -63,25 +94,25 @@
 \end{frame}
 
 
-\begin{frame}
-\frametitle{Background}
+% \begin{frame}
+% \frametitle{Background}
 
-\begin{itemize}
-		\item Metastasis is one of the main determinants of patient prognosis 
-		\item Mortality is often due to systemic spread of tumor and not in situ proliferation
-		\begin {Example}
-		5-year survival rate for invasive breast cancer at diagnosis is:
-		\begin {itemize}
-	\item 99\% for patient with \alert{local tumors}
-	\item 85\% for patients with \alert{regional spread}
-	\item 26\% for those with \alert{tumors that have spread to distance organs} \cite{tarver2012cancer}
-		\end {itemize}
-		\end {Example}
-		\item Currently, the molecular mechanism of metastasis is not well understood
-		\item Neoplastic drug interventions mostly target proliferation, not metastatic transformation
-\end{itemize}
+% \begin{itemize}
+% 		\item Metastasis is one of the main determinants of patient prognosis 
+% 		\item Mortality is often due to systemic spread of tumor and not in situ proliferation
+% 		\begin {Example}
+%		5-year survival rate for invasive breast cancer at diagnosis is:
+%		\begin {itemize}
+%	\item 99\% for patient with \alert{local tumors}
+%	\item 85\% for patients with \alert{regional spread}
+%	\item 26\% for those with \alert{tumors that have spread to distance organs} \cite{tarver2012cancer}
+%		\end {itemize}
+%		\end {Example}
+%		\item Currently, the molecular mechanism of metastasis is not well understood
+%		\item Neoplastic drug interventions mostly target proliferation, not metastatic transformation
+%\end{itemize}
 
-\end{frame}
+% \end{frame}
 
 \begin{frame}
 	\frametitle{Quantifying the Invasive Potential of Tumors}
@@ -94,20 +125,43 @@
 	\end{itemize}
 \end{frame}
 
+
 \begin{frame}
-	\frametitle{Related Research Work and Current Developments}
+	\frametitle{Phenotype quantification allows us to pull out the molecular correlates}
 	\begin{itemize}
-			\item A quantitative model to study and characterize metastasis has yet to be developed
-			\item \cite{shamir2014twist1} challenge the epithelial-to-mesenchymal transition requirement for metastasis, and instead, provide evidence in support of a model based on Twist1 induced dissemination of cytokeratin positive epithelial cells
-			\item \cite{cheung2016polyclonal} demonstrated that tumor cells can invade and metastasize in clusters challenging the single-cell/single-metastasis model
-			\item They further study how Keratin 14, a known molecular biomarker for metastasis, expressing cells intiate and complete the metastatic process 
+		\item Invasivenes quantification allows us to calculate the genetic contribution of individual genes
+		\begin{itemize}
+				\item Quantitive characterization allows us to detect even minor contributors
+				\item Quantification of phenotype allows us to calculate the interaction between different genes
+				\item The fine-grainness of the quantification allows us to perform genetic correlation at the genome scale
+		\end{itemize}
 	\end{itemize}
 \end{frame}
 
+
+\begin{frame}
+	\frametitle{Why we use Keratin 14 as a proof of expression?}
+	\begin{itemize}
+			\item Keratin 14 is a know biomolecular marker for metastasis
+			\item {[Shamir .. Bader Ewald 2014]} challenge the epithelial-to-mesenchymal transition requirement for metastasis, and instead, provide evidence in support of a model based on Twist1 induced dissemination of cytokeratin positive epithelial cells
+			\item {[Cheung .. Bader Ewald 2016]} demonstrated that tumor cells only can invade and metastasize in clusters
+			\item in the same paper, Cheung et al. suggested Keratin 14-associated pathways are key regulators of metastasis
+	\end{itemize}
+\end{frame}
+
+
 \begin{frame}
 	\frametitle{Project Objective}
-		The first aim of the project will be to test the hypothesis that K14 is directly correlated with invasiveness versus the alternative hypothesis that organoid size drives both K14 expression and invasion 
+	\begin{itemize}
+		\item We will test whether K14 is correlated with invasiveness:
+		\begin{enumerate}
+			\item Total K14 
+			\item Peripheral K14
+			\item Central K14
+		\end{enumerate}
+	\end{itemize}
 \end{frame}
+
 
 \begin{frame}
 	\frametitle{Our Data}
@@ -115,68 +169,83 @@
 			\item MMTV-PyMT transgenic mice were be used to produce a supply of organoids
 			\item Tumors were removed from 4 mice and a total of 90 - 150 small and large organoids were generated per tumor ($\approx$ 300 organoids in total per tumor)
 			\item The organoids were imaged using differential interference contrast (DIC) microscopy
-			\item The images were manually traced using \alert{$ImageJ$} to define organoid boundaries
+			\item The images were manually traced using \textsc{ImageJ} to define organoid boundaries
 			\item corresponding K14 images are available
 	\end{itemize}
 \end{frame}
 
-\begin{frame}
-	\frametitle{Our Computer Model (Spectral Power)}
-	\begin{itemize}
-		\item the manually traced boundary is defined by a pair of points \(\{x_v, y_v\}\) for $p \in [0, P-1]$, where $P$ is the total number of points
-		\item First the overall length $L$ was calculated
-		\item $L = \sum_{v=1}^{V-1} \sqrt{(x_v - x_{v-1})^2 + (y_v - y_{v-1})^2}$
-		\item Next, an equally spaced grid was defined with distance $L/M$ between adjacent points, where $M=128$
-		\item Then, linear interpolation was used to generate a new boundary with equally spaced points \(\{x_j, y_j\}\), where $j \in \{0,1,...,M-1\}$  
-	\end{itemize}
-\end{frame}
+% \begin{frame}
+% 	\frametitle{Our Computer Model (Spectral Power)}
+%	\begin{itemize}
+%		\item the manually traced boundary is defined by a pair of points \(\{x_v, y_v\}\) for $p \in [0, P-1]$, where $P$ is the total number of points
+%		\item First the overall length $L$ was calculated
+%		\item $L = \sum_{v=1}^{V-1} \sqrt{(x_v - x_{v-1})^2 + (y_v - y_{v-1})^2}$
+%		\item Next, an equally spaced grid was defined with distance $L/M$ between adjacent points, where $M=128$
+%		\item Then, linear interpolation was used to generate a new boundary with equally spaced points \(\{x_j, y_j\}\), where $j \in \{0,1,...,M-1\}$  
+%	\end{itemize}
+% \end{frame}
+
+%\begin{frame}
+%	\frametitle{Fourier Transform of the edge shape}
+%	\begin{itemize}
+%			\item Then, a fast Fourier transform on the newly generated boundary is performed according to:
+%			\newline
+%			$\hat{x}_k = \sum_{j=0}^{M-1} e^{-2\pi ijk/M} x_j$ 
+%			\newline
+%			$\hat{y}_k = \sum_{j=0}^{M-1} e^{-2\pi ijk/M} y_j$ 
+%			\item where $k \in \{0,1,...,M/2+1\}$
+%	\end{itemize}
+%\end{frame}
 
 \begin{frame}
-	\begin{itemize}
-			\item Then, a fast Fourier transform on the newly generated boundary is performed according to:
-			\newline
-			$\hat{x}_k = \sum_{j=0}^{M-1} e^{-2\pi ijk/M} x_j$ 
-			\newline
-			$\hat{y}_k = \sum_{j=0}^{M-1} e^{-2\pi ijk/M} y_j$ 
-			\item where $k \in \{0,1,...,M/2+1\}$
-	\end{itemize}
-\end{frame}
-
-\begin{frame}
-	\begin{itemize}
-			\item The spectral power $P_k$ is given by:
-			\newline
-			$P_k = |\hat{x}_k|^2 + |\hat{y}_k|^2$
-			\newline
-			\item where $k \in \{0,1,...,M/2+1\}$
-			\item $P_0$ is the center and $P_1$ is used to normalize the total power given by:
-			\newline
-			$P_{total} = \sum_{k=2}^{M/2+1} P_k/P_1$
-			\item this produces a spectral power that is scale invariant in addition to being transilation and rotation invariant. 
-	\end{itemize}
-\end{frame}
-
-\begin{frame}
-	\begin{itemize}
-			\item Means and parametric derivative transforms are estimated
-			\item This is done to smooth out artifacts in the boundary 
-			\item The transform for $\bar{x}_{j\prime} \equiv (x_{j\prime+1/2} + x_{j\prime-1/2})/2$ is: 
-			\newline
-			$\hat{\bar{x}}_k = \cos(\pi k/M)\hat{x}$ 
-			\newline
-			\item The transform for $\dot{x}$ is: 
-			\newline
-			$\hat{\dot{x}} = (iM/\pi)\sin(\pi k/M)\hat{x}$
-			\item Therefore, the final weighted spectral power becomes:
-			\newline
-			$w \equiv \sum_{k=2}^{M/2} (M/\pi)^2 \sin^2(\pi k/M) \cos^2(\pi k/M) P_k/P_1$
-	\end{itemize}
-\end{frame}
-
-\begin{frame}
+	\frametitle{Fourier Transform reminder}
 	\begin{figure}
 		\centering
-		\includegraphics[width=7cm, height=8cm]{Image1}
+		\includegraphics[width=7cm]{FFT-Time-Frequency-View.png}
+	\end{figure}
+\end{frame}
+
+
+% \begin{frame}
+%	\frametitle{Spectral Power}
+%	\begin{itemize}
+%			\item The spectral power $P_k$ is given by:
+%			\newline
+%			$P_k = |\hat{x}_k|^2 + |\hat{y}_k|^2$
+%			\newline
+%			\item where $k \in \{0,1,...,M/2+1\}$
+%			\item $P_0$ is the center and $P_1$ is used to normalize the total power given by:
+%			\newline
+%			$P_{total} = \sum_{k=2}^{M/2+1} P_k/P_1$
+%			\item this produces a spectral power that is scale invariant in addition to being transilation and rotation invariant. 
+%			\item we use a slightly more comples formula to smooth out the artifacts:
+%			\newline
+%			$w \equiv \sum_{k=2}^{M/2} (M/\pi)^2 \sin^2(\pi k/M) \cos^2(\pi k/M) P_k/P_1$
+%	\end{itemize}
+% \end{frame}
+
+%\begin{frame}
+%	\begin{itemize}
+%			\item Means and parametric derivative transforms are estimated
+%			\item This is done to smooth out artifacts in the boundary 
+%			\item The transform for $\bar{x}_{j\prime} \equiv (x_{j\prime+1/2} + x_{j\prime-1/2})/2$ is: 
+%			\newline
+%			$\hat{\bar{x}}_k = \cos(\pi k/M)\hat{x}$ 
+%			\newline
+%			\item The transform for $\dot{x}$ is: 
+%			\newline
+%			$\hat{\dot{x}} = (iM/\pi)\sin(\pi k/M)\hat{x}$
+%			\item Therefore, the final weighted spectral power becomes:
+%			\newline
+%			$w \equiv \sum_{k=2}^{M/2} (M/\pi)^2 \sin^2(\pi k/M) \cos^2(\pi k/M) P_k/P_1$
+%	\end{itemize}
+%\end{frame}
+
+\begin{frame}
+	\frametitle{Example}
+	\begin{figure}
+		\centering
+		\includegraphics[height=8cm]{fig1_CTN010.pdf}
 	\end{figure}
 \end{frame}
 
@@ -216,59 +285,76 @@
 \end{frame}
 
 \begin{frame}
+	
+		\frametitle{Convolution}
+\begin{description}
+	\item	
+	\begin{figure}	
+		\centering
+		\includegraphics[height=4cm]{RiverTrain-ImageConvDiagram}  \hspace*{4cm}
+	\end{figure}
+	\item $ (f*g)[i, j] = \sum_{k=minW_{kernel}}^{maxW_{kernel}}\sum_{l=minH_{kernel}}^{maxH_{kernel}} f[i-k, j-l]g[k, l] $
+\end{description}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Convolution for efficient organoid segmentation}
 	\begin{figure}
 		\centering
-		\includegraphics[width=4cm, height=4cm]{Image4}
-		\includegraphics[width=4cm, height=4cm]{Image5}
-		\includegraphics[width=4cm, height=4cm]{Image6}
+		\includegraphics[width=5cm]{Border}
+		\includegraphics[width=5cm]{convolved_array}
+		\includegraphics[width=3.5cm]{internal_map}
+		\includegraphics[width=3.5cm]{inner_border}
+		\includegraphics[width=3.5cm]{internal_area}
 		\begin{columns}
 		\column{0.5\textwidth}
-			radius, $r= 20$. \newline $pixel size \sim 0.5 \mu$ 
+			radius, $r= 20$ pixel size $\sim 0.5 \mu$ 
 		\end{columns}
 	\end{figure}
 \end{frame}
 
 \begin{frame}
-	\begin{figure}
-		\frametitle{Small Organoids}
+	\frametitle{Peripheral K14 expression correlates with invasive potential}
+	\begin{figure}		
 		\centering
-		\includegraphics[width=10cm, height=3cm]{Image2}
+		%\includegraphics[width=4cm]{Corr_size}
+		\includegraphics[height=5cm]{Corr_K14}
+		%\includegraphics[width=4cm]{Corr_K14_central}
+		\includegraphics[height=5cm]{Corr_K14_mean}
 	\end{figure}
 \end{frame}
 
-\begin{frame}
-	\begin{figure}
-		\frametitle{Large Organoids}
-		\centering
-		\includegraphics[width=10cm, height=3cm]{Image3}
-	\end{figure}
-\end{frame}
 
 \begin{frame}
-	\centering
-	\resizebox{\textwidth}{!}{
-	 \begin{tabular}{||c c c c c c c||}
-		 \hline
-		 Organoids (mouse\# Size) & 1 Small & 1 Large & 2 Small & 2 Large & 3 Small & 3 Large \\ [0.5ex]
-		 \hline\hline
-		 Fractional Areav($r^2$) & \textbf{0.401} & 0.211 & \textbf{0.518} & 0.239 & \textbf{0.493} & 0.110 \\
-		 \hline
-		 Peripheral K14($r^2$) & 0.370 & \textbf{0.379} & 0.464 & \textbf{0.339} & 0.333 & \textbf{0.179} \\
-		 \hline
-		 Centeral K14($r^2$) & 0.174 & 0.187 & 0.337 & 0.093 & 0.251 & 0.013 \\
-		 \hline
-		 Total K14($r^2$) & 0.204 & 0.205 & 0.361 & 0.110 & 0.264 & 0.019 \\
-		 \hline
-		 K14 Mean($r^2$) & 0.057 & 0.011 & 0.023 & 0.239 & 0.011 & 0.023 \\ [1ex]
-		 \hline
-	\end{tabular}
-	}
+	\begin{figure}
+		\frametitle{Peripheral K14 explains correlates with invasive potential the best}
+		\centering
+		\resizebox{\textwidth}{!}{
+		 \begin{tabular}{||c c c c||}
+			\hline
+			 & \multicolumn{3}{|c|}{$r^2$ by mouse} \\
+			 \hline
+			 Organoids (mouse\#) & 1 & 2 & 3  \\ [0.5ex]
+			 \hline\hline
+			  \textbf{Peripheral sum K14} & \textbf{0.39} & \textbf{0.43} & \textbf{0.29} \\
+			 \hline
+			 Centeral sum K14 & 0.21 & 0.19 & 0.11 \\
+			 \hline
+			 Entire sum K14 & 0.22 & 0.22 & 0.12 \\
+			 \hline
+%			 K14 Mean & 0.02 & 0.04 & 0.03 \\ [1ex]
+%			 \hline
+			Size & 0.27 & 0.33 & 0.27 \\
+			 \hline
+		\end{tabular}
+		}
+	\end{figure}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Discussion}
 	\begin{itemize}
-			\item Looking at K14 expression in the periphery of the organoids holds some promise
+			\item Looking at K14 expression in the periphery of the organoids is promising
 			\item K14 expression in the center of the organoids correlates less with spectral score than peripheral K14 expression 
 			\item K14 Mean doesn't seem to contribute much
 			\item Using peripheral K14 expression seems to have more significance for large organoids 
@@ -279,18 +365,30 @@
 \begin{frame}
 	\frametitle{Future Directions}
 	\begin{itemize}
-			\item Mouse \#4 data seems to be slightly off, so fix it
-			\item Establish statistical significance for our hypothesis 
+			% \item Mouse \#4 data seems to be slightly off, so fix it
+			% \item Establish statistical significance for our hypothesis 
 			\item Apply our model on human organoids generated from breast tumors 
 			\newline
-			...
 	\end{itemize}
 \end{frame}
 
+
 \begin{frame}
-	\centering
-	Thank You
+ 	\frametitle{Thank you!}
+	\begin{itemize}
+			% \item Mouse \#4 data seems to be slightly off, so fix it
+			% \item Establish statistical significance for our hypothesis 
+			\item Joel Bader
+			\item Joel Bader lab members
+			\newline
+			\item Andrew Ewald
+			\item Veena Padamanaban (data)
+			\item Andrew Ewald members
+			\newline
+			\item Cancer Target Discovery and Development 
+	\end{itemize}
 \end{frame}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %\begin{frame}
@@ -338,7 +436,7 @@
 %\end{tikzpicture}
 %\end{frame}
 
-\bibliography{refs}
-\bibliographystyle{apalike}
+% \bibliography{refs}
+% \bibliographystyle{apalike}
 
 \end{document}

@@ -159,12 +159,12 @@ def get_interpolate(points, contour_in, contour_out):
     return ret
 
 def get_area(points):
-    n = len(points) # of corners
+    n = len(points)  # of corners
     area = 0.0
     for i in range(n):
         j = (i + 1) % n
-        area += points[i,0] * points[j,1]
-        area -= points[j,0] * points[i,1]
+        area += points[i, 0] * points[j, 1]
+        area -= points[j, 0] * points[i, 1]
     area = abs(area) / 2.0
     return area
 
