@@ -1533,7 +1533,7 @@ def calc_inv_vs_k14(args):
     smooth = np.exp(-facsq * k_sq)
     
     organoids = ctn_list
-    nrow = len(ctn_list)
+    #nrow = len(ctn_list)
     ncol = 3
 
     ff_list = [ ]
@@ -1547,138 +1547,144 @@ def calc_inv_vs_k14(args):
     area_list = [ ]
     sizefrac_list = [ ]
 
-    plt.figure(figsize=(25, nrow * ncol))
-    rownum = 0        
-    #    for c in ctn_list:
-    # for c in ['CTN005']:
-    #for c in ctn_list[:3]:
-    for k in ctn_list:
-        # k14 begin
-        logger.info('... %s', k)
-        
-        xy_file = os.path.join(xy_dir, k + '.txt')
-        (xy_raw, xy_interp, xy_hat, tot_length, area, form_factor, power_norm) = xyfile_to_spectrum(xy_file, nfft)
-        power_norm = power_norm * smooth
-        power_ksq = power_norm * k_sq
-        sumpower = sum(power_norm[2:])
-        sumpowerksq = sum(power_ksq[2:])
+    chuncks = [ctn_list[i:i + 10] for i in range(0, len(ctn_list), 10)]
 
-        rownum += 1
-        fullpath = os.path.join(orig_dir, k + '.tif')
-        (img_dic, img_k14, scale, tag_photometric, tag_color) = read_image_pair(fullpath)
-        i = (rownum - 1) * ncol # plot sequence number starting point
-        
-        size_area = scale * scale * area
-        size_perimeter = scale * tot_length
+    for c in range(0, len(chuncks)): 
 
-        # extract k14 intensity from image
-        (img_fill, fill_np) = create_boundary(img_k14, xy_interp, scale, 'fill')
-        pixels_inside = img_k14[ fill_np > 0 ]
-        pixels_outside = img_k14[ fill_np == 0 ]
+        nrow = len(chuncks[c])
 
-        # extract k14 intensity from image for peripheral and central pixels
-        (edge_mask, center_mask) = get_edge_pixles(img_k14, xy_interp, scale)
-        pixels_inside_peripheral_mask = img_k14[edge_mask > 0]
-        pixels_inside_central_mask = img_k14[center_mask > 0]
-        k14sum_edge = np.sum(pixels_inside_peripheral_mask.ravel())
-        k14sum_center = np.sum(pixels_inside_central_mask.ravel())
-        
-        k14sum = np.sum(pixels_inside.ravel())
-        k14mean = np.mean(pixels_inside.ravel())
-        ninside = len(pixels_inside.ravel())
-        ntotal = len(img_k14.ravel())
-        # logger.info('%s %d pixels, sum = %f, mean = %f', k, ninside, k14sum, k14mean)
-        if (tag_photometric == '1'):
-            k14mean = 255.0 - k14mean
-            k14sum = (255.0 * ninside) - k14sum
-            k14sum_edge = (255.0 * ninside) - k14sum_edge
-            k14sum_center = (255.0 * ninside) - k14sum_center
-            # logger.info('-> %d pixels, sum = %f, mean = %f', ninside, k14sum, k14mean)
-        k14sum = k14sum / float(ntotal * 255)
-        k14sum_edge = k14sum_edge / float(ntotal * 255)
-        k14sum_center = k14sum_center / float(ntotal * 255)
-        k14mean = k14mean / 255.0
-        # logger.info('k14 mean %f, k14sum normalized %f for %d total pixels', k14mean, k14sum, ntotal)            
+        plt.figure(figsize=(25, nrow * ncol))
+        rownum = 0       
+        #    for c in ctn_list:
+        # for c in ['CTN005']:
+        #for c in ctn_list[:3]:
+        for k in chuncks[c]:
+            # k14 begin
+            logger.info('... %s', k)
+            
+            xy_file = os.path.join(xy_dir, k + '.txt')
+            (xy_raw, xy_interp, xy_hat, tot_length, area, form_factor, power_norm) = xyfile_to_spectrum(xy_file, nfft)
+            power_norm = power_norm * smooth
+            power_ksq = power_norm * k_sq
+            sumpower = sum(power_norm[2:])
+            sumpowerksq = sum(power_ksq[2:])
 
-        size_npixel = ninside
-        if (tag_color == 'rgb'):
-            size_npixel = size_npixel / 3.0
-        size_frac = float(ninside)/float(ntotal)
-        
-        new_table[k]['invasion_spectral'] = str(sumpowerksq)
-        new_table[k]['invasion_ff'] = str(form_factor)
-        new_table[k]['size_area'] = str(size_area)
-        new_table[k]['size_perimeter'] = str(size_perimeter)
-        new_table[k]['size_npixel'] = str(size_npixel)
-        new_table[k]['size_frac'] = str(size_frac)
-        new_table[k]['k14_sum'] = str(k14sum)
-        new_table[k]['k14_sum_edge'] = str(k14sum_edge)
-        new_table[k]['k14_sum_center'] = str(k14sum_center)
-        new_table[k]['k14_mean'] = str(k14mean)
-        new_table[k]['tag_photometric'] = tag_photometric
-        new_table[k]['tag_color'] = tag_color
-        new_table[k]['tag_scale'] = str(scale)
+            fullpath = os.path.join(orig_dir, k + '.tif')
+            (img_dic, img_k14, scale, tag_photometric, tag_color) = read_image_pair(fullpath)
+            
+            size_area = scale * scale * area
+            size_perimeter = scale * tot_length
 
-        ff_list.append(form_factor)
-        sumpower_list.append(sumpower)
-        sumpowerksq_list.append(sumpowerksq)
-        k14mean_list.append(k14mean)
-        k14sum_list.append(k14sum)
-        k14sum_edge_list.append(k14sum_edge)
-        k14sum_center_list.append(k14sum_center)
-        area_list.append(size_area)
-        sizefrac_list.append(size_frac)
-        
-        # all the plots
-        
-        i = (rownum - 1) * ncol # plot sequence number starting point
+            # extract k14 intensity from image
+            (img_fill, fill_np) = create_boundary(img_k14, xy_interp, scale, 'fill')
+            pixels_inside = img_k14[ fill_np > 0 ]
+            pixels_outside = img_k14[ fill_np == 0 ]
 
-        # K14 image
-        i += 1
-        plt.subplot(nrow, ncol, i)
-        plt.imshow(img_k14)
-        plt.title('K14 ')
-        plt.ylabel('%s' % k)
+            # extract k14 intensity from image for peripheral and central pixels
+            (edge_mask, center_mask) = get_edge_pixles(img_k14, xy_interp, scale)
+            pixels_inside_peripheral_mask = img_k14[edge_mask > 0]
+            pixels_inside_central_mask = img_k14[center_mask > 0]
+            k14sum_edge = np.sum(pixels_inside_peripheral_mask.ravel())
+            k14sum_center = np.sum(pixels_inside_central_mask.ravel())
+            
+            k14sum = np.sum(pixels_inside.ravel())
+            k14mean = np.mean(pixels_inside.ravel())
+            ninside = len(pixels_inside.ravel())
+            ntotal = len(img_k14.ravel())
+            # logger.info('%s %d pixels, sum = %f, mean = %f', k, ninside, k14sum, k14mean)
+            if (tag_photometric == '1'):
+                k14mean = 255.0 - k14mean
+                k14sum = (255.0 * ninside) - k14sum
+                k14sum_edge = (255.0 * ninside) - k14sum_edge
+                k14sum_center = (255.0 * ninside) - k14sum_center
+                # logger.info('-> %d pixels, sum = %f, mean = %f', ninside, k14sum, k14mean)
+            k14sum = k14sum / float(ntotal * 255)
+            k14sum_edge = k14sum_edge / float(ntotal * 255)
+            k14sum_center = k14sum_center / float(ntotal * 255)
+            k14mean = k14mean / 255.0
+            # logger.info('k14 mean %f, k14sum normalized %f for %d total pixels', k14mean, k14sum, ntotal)            
 
-        # DIC image
-        #i += 1
-        #plt.subplot(nrow, ncol, i)
-        #plt.title('DIC')
-        #plt.imshow(img_dic)
+            size_npixel = ninside
+            if (tag_color == 'rgb'):
+                size_npixel = size_npixel / 3.0
+            size_frac = float(ninside)/float(ntotal)
+            
+            new_table[k]['invasion_spectral'] = str(sumpowerksq)
+            new_table[k]['invasion_ff'] = str(form_factor)
+            new_table[k]['size_area'] = str(size_area)
+            new_table[k]['size_perimeter'] = str(size_perimeter)
+            new_table[k]['size_npixel'] = str(size_npixel)
+            new_table[k]['size_frac'] = str(size_frac)
+            new_table[k]['k14_sum'] = str(k14sum)
+            new_table[k]['k14_sum_edge'] = str(k14sum_edge)
+            new_table[k]['k14_sum_center'] = str(k14sum_center)
+            new_table[k]['k14_mean'] = str(k14mean)
+            new_table[k]['tag_photometric'] = tag_photometric
+            new_table[k]['tag_color'] = tag_color
+            new_table[k]['tag_scale'] = str(scale)
 
-        # boundary from raw points
-        i += 1
-        ax = plt.subplot(nrow, ncol, i)
-        # make sure the path is closed
-        x = list(xy_raw[:,0])
-        y = list(xy_raw[:,1])
-        x.append(x[0])
-        y.append(y[0])
-        xx = [ scale * val for val in x ]
-        yy = [ scale * val for val in y]
-        plt.plot(xx, yy, 'k', label='Boundary from file')
-        #plt.scatter(scale * xy_interp[:,0], scale * xy_interp[:,1], facecolors='none', edgecolors='b')
-        # ax.axis('equal')
-        plt.imshow(img_dic, alpha=0.5)
-        ax.set_xlim(0, img_dic.shape[1] - 1)
-        ax.set_ylim(0, img_dic.shape[0] - 1)
-        #ax.set_aspect('auto')
-        plt.title('Form Factor %.3f' % (form_factor))
-        plt.gca().invert_yaxis()
-        
-        # power spectrum
-        i += 1
-        plt.subplot(nrow, ncol, i)
-        x = range(len(power_norm))
-        # logger.info('len(x) %d len(pwr) %d', len(x), len(power_norm))
-        # plt.plot(x[2:], power_norm[2:], 'k')
-        plt.plot(x[2:], power_ksq[2:], 'b')
-        # plt.xlabel('Frequency')
-        plt.ylabel('Power k^2')
-        plt.title('Spectral %.3f' % (sumpowerksq))
+            ff_list.append(form_factor)
+            sumpower_list.append(sumpower)
+            sumpowerksq_list.append(sumpowerksq)
+            k14mean_list.append(k14mean)
+            k14sum_list.append(k14sum)
+            k14sum_edge_list.append(k14sum_edge)
+            k14sum_center_list.append(k14sum_center)
+            area_list.append(size_area)
+            sizefrac_list.append(size_frac)
+            
+            # all the plots
+            rownum += 1
+            i = (rownum - 1) * ncol # plot sequence number starting point
 
-    pdf.savefig()
-    plt.close()
+            # K14 image
+            i += 1
+            plt.subplot(nrow, ncol, i)
+            plt.imshow(img_k14)
+            plt.title('K14 ')
+            plt.ylabel('%s' % k)
+
+            # DIC image
+            #i += 1
+            #plt.subplot(nrow, ncol, i)
+            #plt.title('DIC')
+            #plt.imshow(img_dic)
+
+            # boundary from raw points
+            i += 1
+            ax = plt.subplot(nrow, ncol, i)
+            # make sure the path is closed
+            x = list(xy_raw[:,0])
+            y = list(xy_raw[:,1])
+            x.append(x[0])
+            y.append(y[0])
+            xx = [ scale * val for val in x ]
+            yy = [ scale * val for val in y]
+            plt.plot(xx, yy, 'k', label='Boundary from file')
+            #plt.scatter(scale * xy_interp[:,0], scale * xy_interp[:,1], facecolors='none', edgecolors='b')
+            # ax.axis('equal')
+            plt.imshow(img_dic, alpha=0.5)
+            ax.set_xlim(0, img_dic.shape[1] - 1)
+            ax.set_ylim(0, img_dic.shape[0] - 1)
+            #ax.set_aspect('auto')
+            plt.title('Form Factor %.3f' % (form_factor))
+            plt.gca().invert_yaxis()
+            
+            # power spectrum
+            i += 1
+            plt.subplot(nrow, ncol, i)
+            x = range(len(power_norm))
+            # logger.info('len(x) %d len(pwr) %d', len(x), len(power_norm))
+            # plt.plot(x[2:], power_norm[2:], 'k')
+            plt.plot(x[2:], power_ksq[2:], 'b')
+            # plt.xlabel('Frequency')
+            plt.ylabel('Power k^2')
+            plt.title('Spectral %.3f' % (sumpowerksq))
+            #plt.subplots_adjust(top=0.7, hspace=.5)
+
+        plt.tight_layout()
+        pdf.savefig()
+        plt.close()
         
     plt.figure(figsize=(25,5))
     plt.suptitle('%d organoids' % (nrow))
