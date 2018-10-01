@@ -101,14 +101,15 @@ def main():
     rows = len(files)
 
     for f in files:
-        plt.figure(figsize=(17,7))
+        plt.figure(figsize=(25,10))
         plt.suptitle(f.split('/')[-1])
         data = read_file(f)
-        sps = [151, 152, 153, 154, 155]
-        for (sp, xname) in zip( sps, ('K14 Sum Peripheral Pixels', 'Fractional Area', 'K14 Sum Central Pixels', 'K14 Total Sum', 'K14 Mean') ):
+        sps = [241, 242, 243, 244, 245, 246, 247]
+        for (sp, xname) in zip( sps, ('K14 Sum Peripheral Pixels', 'Fractional Area', 'K14 Sum Central Pixels', 'K14 Total Sum', 'K14 Total Mean', 'K14 Peripheral Mean', 'K14 Central Mean') ):
             plot_ellipse(sp, data[xname], data['Invasion'], xname, 'Invasion')
         pdf.savefig()
         plt.close()
+    plt.tight_layout()
     pdf.close()             
     
     return None

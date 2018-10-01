@@ -1509,7 +1509,7 @@ def calc_inv_vs_k14(args):
         new_table[i] = dict()
     new_fields = ['invasion_spectral', 'invasion_ff',
                   'size_area', 'size_perimeter', 'size_npixel', 'size_frac',
-                  'k14_mean', 'k14_sum', 'k14_sum_edge', 'k14_sum_center',
+                  'k14_mean', 'k14_mean_edge', 'k14_mean_center', 'k14_sum', 'k14_sum_edge', 'k14_sum_center',
                   'tag_photometric', 'tag_color', 'tag_scale']
     for k in new_table:
         for f in new_fields:
@@ -1540,6 +1540,8 @@ def calc_inv_vs_k14(args):
     sumpower_list = [ ]
     sumpowerksq_list = [ ]
     k14mean_list = [ ]
+    k14_edge_mean_list = [ ]
+    k14_center_mean_list = [ ]
     k14sum_list = [ ]
     k14sum_edge_list = [ ]
     k14sum_center_list = [ ]
@@ -1589,11 +1591,15 @@ def calc_inv_vs_k14(args):
             
             k14sum = np.sum(pixels_inside.ravel())
             k14mean = np.mean(pixels_inside.ravel())
+            k14mean_edge = np.mean(pixels_inside_peripheral_mask.ravel())
+            k14mean_center = np.mean(pixels_inside_central_mask.ravel())
             ninside = len(pixels_inside.ravel())
             ntotal = len(img_k14.ravel())
             # logger.info('%s %d pixels, sum = %f, mean = %f', k, ninside, k14sum, k14mean)
             if (tag_photometric == '1'):
                 k14mean = 255.0 - k14mean
+                k14mean_edge = 255.0 - k14mean_edge
+                k14mean_center = 255.0 - k14mean_center
                 k14sum = (255.0 * ninside) - k14sum
                 k14sum_edge = (255.0 * ninside) - k14sum_edge
                 k14sum_center = (255.0 * ninside) - k14sum_center
@@ -1602,6 +1608,8 @@ def calc_inv_vs_k14(args):
             k14sum_edge = k14sum_edge / float(ntotal * 255)
             k14sum_center = k14sum_center / float(ntotal * 255)
             k14mean = k14mean / 255.0
+            k14mean_edge = k14mean_edge / 255.0
+            k14mean_center = k14mean_center / 255.0
             # logger.info('k14 mean %f, k14sum normalized %f for %d total pixels', k14mean, k14sum, ntotal)            
 
             size_npixel = ninside
@@ -1619,6 +1627,8 @@ def calc_inv_vs_k14(args):
             new_table[k]['k14_sum_edge'] = str(k14sum_edge)
             new_table[k]['k14_sum_center'] = str(k14sum_center)
             new_table[k]['k14_mean'] = str(k14mean)
+            new_table[k]['k14_mean_edge'] = str(k14mean_edge)
+            new_table[k]['k14_mean_center'] = str(k14mean_center)
             new_table[k]['tag_photometric'] = tag_photometric
             new_table[k]['tag_color'] = tag_color
             new_table[k]['tag_scale'] = str(scale)
@@ -1627,6 +1637,8 @@ def calc_inv_vs_k14(args):
             sumpower_list.append(sumpower)
             sumpowerksq_list.append(sumpowerksq)
             k14mean_list.append(k14mean)
+            k14_edge_mean_list.append(k14mean_edge)
+            k14_center_mean_list.append(k14mean_center)
             k14sum_list.append(k14sum)
             k14sum_edge_list.append(k14sum_edge)
             k14sum_center_list.append(k14sum_center)
@@ -1686,12 +1698,11 @@ def calc_inv_vs_k14(args):
         pdf.savefig()
         plt.close()
         
-    plt.figure(figsize=(25,5))
-    plt.suptitle('%d organoids' % (nrow))
+    plt.figure(figsize=(25,8))
 
-    for (sp, xlist, xname) in zip( (151, 152, 153, 154, 155),
-        (sizefrac_list, k14sum_list, k14sum_edge_list, k14sum_center_list, k14mean_list),
-        ('Fractional Area', 'K14 Sum', 'K14 Sum Peripheral Pixels', 'K14 Sum Centeral Pixels', 'K14 Mean') ):
+    for (sp, xlist, xname) in zip( (151, 152, 153, 154),
+        (sizefrac_list, k14sum_list, k14sum_edge_list, k14sum_center_list),
+        ('Fractional Area', 'K14 Sum', 'K14 Sum Peripheral Pixels', 'K14 Sum Centeral Pixels') ):
     
         plt.subplot(sp)
         plt.xlim(0,max(xlist))
@@ -1704,16 +1715,38 @@ def calc_inv_vs_k14(args):
         rsq = r*r
         plt.title('Rsq = %.3f, pval = %.3g' % (rsq, pval))
 
+    plt.tight_layout()
+    pdf.savefig()
+    plt.close()
+
+    plt.figure(figsize=(25,8))
+
+    for (sp, xlist, xname) in zip( (151, 152, 153),
+        (k14mean_list, k14_edge_mean_list, k14_center_mean_list),
+        ('K14 Mean', 'K14 Peripheral Mean', 'K14 Central Mean') ):
+    
+        plt.subplot(sp)
+        plt.xlim(0,max(xlist))
+        plt.ylim(0,max(sumpowerksq_list))
+        for (x1, y1, a1) in zip(xlist, sumpowerksq_list, ctn_list):
+            plt.text(x1, y1, a1, va='center', ha='center')
+        plt.xlabel(xname)
+        plt.ylabel('Invasion')
+        (r, pval) = pearsonr(xlist, sumpowerksq_list)
+        rsq = r*r
+        plt.title('Rsq = %.3f, pval = %.3g' % (rsq, pval))
+
+    plt.tight_layout()
     pdf.savefig()
     plt.close()
     pdf.close()             
 
     textFile = open(os.path.join(outdir, outdir + '.txt'), 'w')
 
-    textFile.write('ID\tInvasion\tFractional Area\tK14 Sum Peripheral Pixels\tK14 Sum Central Pixels\tK14 Total Sum\tK14 Mean\n')
+    textFile.write('ID\tInvasion\tFractional Area\tK14 Sum Peripheral Pixels\tK14 Sum Central Pixels\tK14 Total Sum\tK14 Total Mean\tK14 Peripheral Mean\tK14 Central Mean\n')
 
     for k in ctn_list:
-        textFile.write("%s\t%s\t%s\t%s\t%s\t%s\t%s\n" %(k, new_table[k]['invasion_spectral'], new_table[k]['size_frac'], new_table[k]['k14_sum_edge'], new_table[k]['k14_sum_center'], new_table[k]['k14_sum'], new_table[k]['k14_mean']))
+        textFile.write("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" %(k, new_table[k]['invasion_spectral'], new_table[k]['size_frac'], new_table[k]['k14_sum_edge'], new_table[k]['k14_sum_center'], new_table[k]['k14_sum'], new_table[k]['k14_mean'], new_table[k]['k14_mean_edge'], new_table[k]['k14_mean_center']))
 
     textFile.close()
     
