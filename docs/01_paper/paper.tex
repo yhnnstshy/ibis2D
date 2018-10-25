@@ -2,6 +2,7 @@
 \documentclass[runningheads]{llncs}
 %
 \usepackage{graphicx}
+\usepackage{comment}
 % Used for displaying a sample figure. If possible, figure files should
 % be included in EPS format.
 %
@@ -17,7 +18,7 @@
 % If the paper title is too long for the running head, you can set
 % an abbreviated paper title here
 %
-\author{First Author\inst{1}\orcidID{0000-1111-2222-3333} \and
+\author{First Author \inst{1}\orcidID{0000-1111-2222-3333} \and
 Second Author\inst{2,3}\orcidID{1111-2222-3333-4444} \and
 Third Author\inst{3}\orcidID{2222--3333-4444-5555}}
 %
@@ -25,39 +26,40 @@ Third Author\inst{3}\orcidID{2222--3333-4444-5555}}
 % First names are abbreviated in the running head.
 % If there are more than two authors, 'et al.' is used.
 %
-\institute{Princeton University, Princeton NJ 08544, USA \and
-Springer Heidelberg, Tiergartenstr. 17, 69121 Heidelberg, Germany
-\email{lncs@springer.com}\\
-\url{http://www.springer.com/gp/computer-science/lncs} \and
-ABC Institute, Rupert-Karls-University Heidelberg, Heidelberg, Germany\\
-\email{\{abc,lncs\}@uni-heidelberg.de}}
+\institute{Johns Hopkins University
+\url{http://www} \and
+Other\\
+\email{\{bla,blu\}@jhu.edu}}
 %
 \maketitle              % typeset the header of the contribution
 %
 \begin{abstract}
 Metastasis is the main predictor of outcome for patients with cancer, yet the molecular mechanism driving invasive phenotypes is not well understood. Keratin 14 (K14) is a known molecular biomarker that is correlated with poor outcomes in breast cancer patients. In this study, we apply our automated computer model that quantifies the invasive potential of tumors to characterize K14 expression as it relates to invasion. We test the hypothesis that K14 is directly correlated to invasion versus the alternative hypothesis that size is the main predictor. We used two different transgenic mice as our breast cancer tumor models. Organoids were generated from these mice, and each organoid had a corresponding differential interference contrast image, K14 image, and an invasive potential score generated using our automated system. The parameters assessed include the following: entire K14 expression, peripheral K14 expression (edges of the organoid), central K14 expression (center of the organoid), and organoid size. Peripheral K14 expression showed the strongest correlation with invasion scores for both types of transgenic mice. The results suggest that K14 expression in cells located in the periphery may be an important marker of invasion.
 
-\keywords{First keyword  \and Second keyword \and Another keyword.}
+\keywords{Tumor Invasion  \and Keratin 14 \and ...}
 \end{abstract}
 %
 %
 %
-\section{First Section}
-\subsection{A Subsection Sample}
-Please note that the first paragraph of a section or subsection is
-not indented. The first paragraph that follows a table, figure,
-equation etc. does not need an indent, either.
+\section{Introduction}
 
-Subsequent paragraphs, however, are indented.
+\section {Methods}
 
-\subsubsection{Sample Heading (Third Level)} Only two levels of
-headings should be numbered. Lower level headings remain unnumbered;
-they are formatted as run-in headings.
+\subsection{Databse}
 
-\paragraph{Sample Heading (Fourth Level)}
-The contribution should contain no more than four levels of
-headings. Table~\ref{tab1} gives a summary of all heading levels.
+\subsection{Spectral Analysis}
 
+\subsubsection{}
+
+\section{Results}
+
+\section{Discussion}
+
+\section{Conclusion}
+
+\paragraph{}
+
+\begin{comment}
 \begin{table}
 \caption{Table captions should be placed above the
 tables.}\label{tab1}
@@ -143,4 +145,7 @@ on Proceedings, pp. 1--2. Publisher, Location (2010)
 LNCS Homepage, \url{http://www.springer.com/lncs}. Last accessed 4
 Oct 2017
 \end{thebibliography}
+
+\end{comment}
+
 \end{document}
