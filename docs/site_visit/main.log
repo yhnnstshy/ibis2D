@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  14 SEP 2018 14:16
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  15 NOV 2018 15:06
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -655,15 +655,7 @@ y
 \beamer@dimb=\dimen189
 )
 (/usr/local/texlive/2018/texmf-dist/tex/latex/beamer/beamerouterthemedefault.st
-y)))
-(/usr/local/texlive/2018/texmf-dist/tex/latex/beamer/beamerthemeBoadilla.sty
-(/usr/local/texlive/2018/texmf-dist/tex/latex/beamer/beamercolorthemerose.sty)
-(/usr/local/texlive/2018/texmf-dist/tex/latex/beamer/beamerinnerthemerounded.st
-y)
-(/usr/local/texlive/2018/texmf-dist/tex/latex/beamer/beamercolorthemedolphin.st
-y)
-(/usr/local/texlive/2018/texmf-dist/tex/latex/beamer/beamerouterthemeinfolines.
-sty)) (/usr/local/texlive/2018/texmf-dist/tex/latex/base/inputenc.sty
+y))) (/usr/local/texlive/2018/texmf-dist/tex/latex/base/inputenc.sty
 Package: inputenc 2018/04/06 v1.3b Input encoding file
 \inpenc@prehook=\toks43
 \inpenc@posthook=\toks44
@@ -836,26 +828,40 @@ File: pgflibraryshapes.multipart.code.tex 2010/01/07 v3.0.1a (rcs-revision 1.2)
 \pgfnodepartsevenbox=\box75
 \pgfnodepartsixbox=\box76
 \pgfnodepartfivebox=\box77
-))) (./main.aux)
+)))
+(/usr/local/texlive/2018/texmf-dist/tex/latex/beamer/beamerthemeWarsaw.sty
+(/usr/local/texlive/2018/texmf-dist/tex/latex/beamer/beamerinnerthemerounded.st
+y)
+(/usr/local/texlive/2018/texmf-dist/tex/latex/beamer/beamerouterthemeshadow.sty
+(/usr/local/texlive/2018/texmf-dist/tex/latex/beamer/beamerouterthemesplit.sty)
+)
+(/usr/local/texlive/2018/texmf-dist/tex/latex/beamer/beamercolorthemeorchid.sty
+)
+(/usr/local/texlive/2018/texmf-dist/tex/latex/beamer/beamercolorthemewhale.sty)
+)
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\\' on input line 62.
+
+(./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 43.
-LaTeX Font Info:    ... okay on input line 43.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 43.
-LaTeX Font Info:    ... okay on input line 43.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 43.
-LaTeX Font Info:    ... okay on input line 43.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 43.
-LaTeX Font Info:    ... okay on input line 43.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 43.
-LaTeX Font Info:    ... okay on input line 43.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 43.
-LaTeX Font Info:    ... okay on input line 43.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 43.
-LaTeX Font Info:    ... okay on input line 43.
-LaTeX Font Info:    Try loading font information for OT1+phv on input line 43.
-
-(/usr/local/texlive/2018/texmf-dist/tex/latex/psnfss/ot1phv.fd
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 74.
+LaTeX Font Info:    ... okay on input line 74.
+LaTeX Font Info:    Try loading font information for OT1+phv on input line 74.
+ (/usr/local/texlive/2018/texmf-dist/tex/latex/psnfss/ot1phv.fd
 File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
 )
 *geometry* driver: auto-detecting
@@ -866,14 +872,14 @@ File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
 * layout: <same size as paper>
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
 * modes: includehead includefoot 
-* h-part:(L,W,R)=(10.95003pt, 342.2953pt, 10.95003pt)
+* h-part:(L,W,R)=(28.45274pt, 307.28987pt, 28.45274pt)
 * v-part:(T,H,B)=(0.0pt, 273.14662pt, 0.0pt)
 * \paperwidth=364.19536pt
 * \paperheight=273.14662pt
-* \textwidth=342.2953pt
+* \textwidth=307.28987pt
 * \textheight=244.6939pt
-* \oddsidemargin=-61.31996pt
-* \evensidemargin=-61.31996pt
+* \oddsidemargin=-43.81725pt
+* \evensidemargin=-43.81725pt
 * \topmargin=-72.26999pt
 * \headheight=14.22636pt
 * \headsep=0.0pt
@@ -924,7 +930,7 @@ e
 ))
 ABD: EveryShipout initializing macros
 \AtBeginShipoutBox=\box79
-Package hyperref Info: Link coloring OFF on input line 43.
+Package hyperref Info: Link coloring OFF on input line 74.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
@@ -934,9 +940,9 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count170
 )
-LaTeX Info: Redefining \ref on input line 43.
-LaTeX Info: Redefining \pageref on input line 43.
-LaTeX Info: Redefining \nameref on input line 43.
+LaTeX Info: Redefining \ref on input line 74.
+LaTeX Info: Redefining \pageref on input line 74.
+LaTeX Info: Redefining \nameref on input line 74.
 
 (./main.out) (./main.out)
 \@outlinefile=\write5
@@ -967,212 +973,141 @@ Dictionary: translator-numbers-dictionary, Language: English
 tionary-English.dict
 Dictionary: translator-theorem-dictionary, Language: English 
 ) (./main.nav)
-<hopkinslogo.jpg, id=14, 394.1124pt x 282.8166pt>
-File: hopkinslogo.jpg Graphic file (type jpg)
-<use hopkinslogo.jpg>
-Package pdftex.def Info: hopkinslogo.jpg  used on input line 49.
-(pdftex.def)             Requested size: 59.47511pt x 42.67912pt.
- [1
+<Hopkins_logo_2.png, id=16, 903.375pt x 426.59375pt>
+File: Hopkins_logo_2.png Graphic file (type png)
+<use Hopkins_logo_2.png>
+Package pdftex.def Info: Hopkins_logo_2.png  used on input line 80.
+(pdftex.def)             Requested size: 142.26378pt x 67.17584pt.
+<ctd2_overall.png, id=18, 278.03876pt x 290.08376pt>
+File: ctd2_overall.png Graphic file (type png)
+<use ctd2_overall.png>
+Package pdftex.def Info: ctd2_overall.png  used on input line 80.
+(pdftex.def)             Requested size: 85.35826pt x 89.05746pt.
 
-{/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./hopki
-nslogo.jpg>]
-File: hopkinslogo.jpg Graphic file (type jpg)
-<use hopkinslogo.jpg>
-Package pdftex.def Info: hopkinslogo.jpg  used on input line 63.
-(pdftex.def)             Requested size: 59.47511pt x 42.67912pt.
- [2
+Overfull \hbox (50.69095pt too wide) in paragraph at lines 80--80
+ [][]|  []|  
+ []
+
+
+Overfull \vbox (1.53426pt too high) detected at line 80
+ []
+
+[1
+
+{/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./Hopki
+ns_logo_2.png> <./ctd2_overall.png>] [2
+
+] [3
+
+] [4
+
+] [5
+
+] [6
 
 ]
-LaTeX Font Info:    Try loading font information for U+msa on input line 84.
+LaTeX Font Info:    Try loading font information for U+msa on input line 175.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 84.
+LaTeX Font Info:    Try loading font information for U+msb on input line 175.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-File: hopkinslogo.jpg Graphic file (type jpg)
-<use hopkinslogo.jpg>
-Package pdftex.def Info: hopkinslogo.jpg  used on input line 84.
-(pdftex.def)             Requested size: 59.47511pt x 42.67912pt.
- [3
+) [7
 
 ]
-File: hopkinslogo.jpg Graphic file (type jpg)
-<use hopkinslogo.jpg>
-Package pdftex.def Info: hopkinslogo.jpg  used on input line 95.
-(pdftex.def)             Requested size: 59.47511pt x 42.67912pt.
- [4
-
-]
-File: hopkinslogo.jpg Graphic file (type jpg)
-<use hopkinslogo.jpg>
-Package pdftex.def Info: hopkinslogo.jpg  used on input line 105.
-(pdftex.def)             Requested size: 59.47511pt x 42.67912pt.
-
-[5
-
-]
-File: hopkinslogo.jpg Graphic file (type jpg)
-<use hopkinslogo.jpg>
-Package pdftex.def Info: hopkinslogo.jpg  used on input line 110.
-(pdftex.def)             Requested size: 59.47511pt x 42.67912pt.
- [6
-
-]
-File: hopkinslogo.jpg Graphic file (type jpg)
-<use hopkinslogo.jpg>
-Package pdftex.def Info: hopkinslogo.jpg  used on input line 121.
-(pdftex.def)             Requested size: 59.47511pt x 42.67912pt.
- [7
-
-]
-File: hopkinslogo.jpg Graphic file (type jpg)
-<use hopkinslogo.jpg>
-Package pdftex.def Info: hopkinslogo.jpg  used on input line 132.
-(pdftex.def)             Requested size: 59.47511pt x 42.67912pt.
+<FFT-Time-Frequency-View.png, id=74, 406.51875pt x 284.56313pt>
+File: FFT-Time-Frequency-View.png Graphic file (type png)
+<use FFT-Time-Frequency-View.png>
+Package pdftex.def Info: FFT-Time-Frequency-View.png  used on input line 206.
+(pdftex.def)             Requested size: 199.16928pt x 139.41544pt.
  [8
 
-]
-File: hopkinslogo.jpg Graphic file (type jpg)
-<use hopkinslogo.jpg>
-Package pdftex.def Info: hopkinslogo.jpg  used on input line 143.
-(pdftex.def)             Requested size: 59.47511pt x 42.67912pt.
- [9
+ <./FFT-Time-Frequency-View.png>]
+<fig1_CTN010.pdf, id=81, 867.24pt x 650.43pt>
+File: fig1_CTN010.pdf Graphic file (type pdf)
+<use fig1_CTN010.pdf>
+Package pdftex.def Info: fig1_CTN010.pdf  used on input line 250.
+(pdftex.def)             Requested size: 303.49886pt x 227.62204pt.
 
-]
-File: hopkinslogo.jpg Graphic file (type jpg)
-<use hopkinslogo.jpg>
-Package pdftex.def Info: hopkinslogo.jpg  used on input line 157.
-(pdftex.def)             Requested size: 59.47511pt x 42.67912pt.
- [10
-
-]
-File: hopkinslogo.jpg Graphic file (type jpg)
-<use hopkinslogo.jpg>
-Package pdftex.def Info: hopkinslogo.jpg  used on input line 174.
-(pdftex.def)             Requested size: 59.47511pt x 42.67912pt.
- [11
-
-]
-<Image1.jpg, id=332, 3675.7325pt x 2125.9425pt>
-File: Image1.jpg Graphic file (type jpg)
-<use Image1.jpg>
-Package pdftex.def Info: Image1.jpg  used on input line 181.
-(pdftex.def)             Requested size: 199.16525pt x 227.59363pt.
-File: hopkinslogo.jpg Graphic file (type jpg)
-<use hopkinslogo.jpg>
-Package pdftex.def Info: hopkinslogo.jpg  used on input line 181.
-(pdftex.def)             Requested size: 59.47511pt x 42.67912pt.
- [12
-
- <./Image1.jpg>]
-File: hopkinslogo.jpg Graphic file (type jpg)
-<use hopkinslogo.jpg>
-Package pdftex.def Info: hopkinslogo.jpg  used on input line 195.
-(pdftex.def)             Requested size: 59.47511pt x 42.67912pt.
- [13
-
-]
-File: hopkinslogo.jpg Graphic file (type jpg)
-<use hopkinslogo.jpg>
-Package pdftex.def Info: hopkinslogo.jpg  used on input line 216.
-(pdftex.def)             Requested size: 59.47511pt x 42.67912pt.
- [14
-
-]
-<Image4.jpg, id=413, 809.0225pt x 600.2425pt>
-File: Image4.jpg Graphic file (type jpg)
-<use Image4.jpg>
-Package pdftex.def Info: Image4.jpg  used on input line 229.
-(pdftex.def)             Requested size: 113.80554pt x 113.80913pt.
-<Image5.jpg, id=414, 1120.185pt x 833.1125pt>
-File: Image5.jpg Graphic file (type jpg)
-<use Image5.jpg>
-Package pdftex.def Info: Image5.jpg  used on input line 229.
-(pdftex.def)             Requested size: 113.80269pt x 113.80011pt.
-<Image6.jpg, id=415, 1308.89pt x 989.6975pt>
-File: Image6.jpg Graphic file (type jpg)
-<use Image6.jpg>
-Package pdftex.def Info: Image6.jpg  used on input line 229.
-(pdftex.def)             Requested size: 113.80061pt x 113.80527pt.
-
-Overfull \vbox (7.30666pt too high) detected at line 229
+Overfull \vbox (6.93979pt too high) detected at line 250
  []
 
-File: hopkinslogo.jpg Graphic file (type jpg)
-<use hopkinslogo.jpg>
-Package pdftex.def Info: hopkinslogo.jpg  used on input line 229.
-(pdftex.def)             Requested size: 59.47511pt x 42.67912pt.
+[9
+
+ <./fig1_CTN010.pdf>] [10
+
+] [11
+
+]
+<RiverTrain-ImageConvDiagram.png, id=172, 274.02374pt x 164.86594pt>
+File: RiverTrain-ImageConvDiagram.png Graphic file (type png)
+<use RiverTrain-ImageConvDiagram.png>
+Package pdftex.def Info: RiverTrain-ImageConvDiagram.png  used on input line 29
+8.
+(pdftex.def)             Requested size: 189.16856pt x 113.81102pt.
+ [12
+
+ <./RiverTrain-ImageConvDiagram.png>]
+<Border.png, id=182, 298.716pt x 223.43475pt>
+File: Border.png Graphic file (type png)
+<use Border.png>
+Package pdftex.def Info: Border.png  used on input line 314.
+(pdftex.def)             Requested size: 142.26378pt x 106.41217pt.
+<convolved_array.png, id=183, 240.9pt x 180.675pt>
+File: convolved_array.png Graphic file (type png)
+<use convolved_array.png>
+Package pdftex.def Info: convolved_array.png  used on input line 314.
+(pdftex.def)             Requested size: 142.26378pt x 106.69931pt.
+<internal_map.png, id=184, 298.11375pt x 223.43475pt>
+File: internal_map.png Graphic file (type png)
+<use internal_map.png>
+Package pdftex.def Info: internal_map.png  used on input line 314.
+(pdftex.def)             Requested size: 99.58464pt x 74.63716pt.
+<inner_border.png, id=185, 239.6955pt x 178.86826pt>
+File: inner_border.png Graphic file (type png)
+<use inner_border.png>
+Package pdftex.def Info: inner_border.png  used on input line 314.
+(pdftex.def)             Requested size: 99.58464pt x 74.31354pt.
+<internal_area.png, id=186, 240.29774pt x 180.07275pt>
+File: internal_area.png Graphic file (type png)
+<use internal_area.png>
+Package pdftex.def Info: internal_area.png  used on input line 314.
+(pdftex.def)             Requested size: 99.58464pt x 74.62437pt.
+
+[13
+
+ <./Border.png> <./convolved_array.png> <./internal_map.png> <./inner_border.pn
+g> <./internal_area.png>]
+<Corr_K14.png, id=199, 289.08pt x 285.4665pt>
+File: Corr_K14.png Graphic file (type png)
+<use Corr_K14.png>
+Package pdftex.def Info: Corr_K14.png  used on input line 325.
+(pdftex.def)             Requested size: 144.06766pt x 142.26378pt.
+<Corr_K14_mean.png, id=200, 289.08pt x 285.4665pt>
+File: Corr_K14_mean.png Graphic file (type png)
+<use Corr_K14_mean.png>
+Package pdftex.def Info: Corr_K14_mean.png  used on input line 325.
+(pdftex.def)             Requested size: 144.06766pt x 142.26378pt.
+ [14
+
+ <./Corr_K14.png> <./Corr_K14_mean.png>]
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <10.95> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 352.
+
 [15
 
- <./Image4.jpg> <./Image5.jpg> <./Image6.jpg>]
-<Image2.jpg, id=442, 3693.8pt x 837.1275pt>
-File: Image2.jpg Graphic file (type jpg)
-<use Image2.jpg>
-Package pdftex.def Info: Image2.jpg  used on input line 237.
-(pdftex.def)             Requested size: 284.5193pt x 85.35266pt.
-File: hopkinslogo.jpg Graphic file (type jpg)
-<use hopkinslogo.jpg>
-Package pdftex.def Info: hopkinslogo.jpg  used on input line 237.
-(pdftex.def)             Requested size: 59.47511pt x 42.67912pt.
- [16
+] [16
 
- <./Image2.jpg>]
-<Image3.jpg, id=470, 3717.89pt x 835.12pt>
-File: Image3.jpg Graphic file (type jpg)
-<use Image3.jpg>
-Package pdftex.def Info: Image3.jpg  used on input line 245.
-(pdftex.def)             Requested size: 284.50276pt x 85.35187pt.
-File: hopkinslogo.jpg Graphic file (type jpg)
-<use hopkinslogo.jpg>
-Package pdftex.def Info: hopkinslogo.jpg  used on input line 245.
-(pdftex.def)             Requested size: 59.47511pt x 42.67912pt.
- [17
+] [17
 
- <./Image3.jpg>]
-LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <10.95> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 266.
-File: hopkinslogo.jpg Graphic file (type jpg)
-<use hopkinslogo.jpg>
-Package pdftex.def Info: hopkinslogo.jpg  used on input line 266.
-(pdftex.def)             Requested size: 59.47511pt x 42.67912pt.
- [18
+] [18
+
+] [19
 
 ]
-File: hopkinslogo.jpg Graphic file (type jpg)
-<use hopkinslogo.jpg>
-Package pdftex.def Info: hopkinslogo.jpg  used on input line 277.
-(pdftex.def)             Requested size: 59.47511pt x 42.67912pt.
- [19
-
-]
-File: hopkinslogo.jpg Graphic file (type jpg)
-<use hopkinslogo.jpg>
-Package pdftex.def Info: hopkinslogo.jpg  used on input line 288.
-(pdftex.def)             Requested size: 59.47511pt x 42.67912pt.
- [20
-
-]
-File: hopkinslogo.jpg Graphic file (type jpg)
-<use hopkinslogo.jpg>
-Package pdftex.def Info: hopkinslogo.jpg  used on input line 293.
-(pdftex.def)             Requested size: 59.47511pt x 42.67912pt.
- [21
-
-] (./main.bbl
-LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <10.95> not available
-(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 9.
-)
-File: hopkinslogo.jpg Graphic file (type jpg)
-<use hopkinslogo.jpg>
-Package pdftex.def Info: hopkinslogo.jpg  used on input line 344.
-(pdftex.def)             Requested size: 59.47511pt x 42.67912pt.
- [22
-
- </usr/local/texlive/2018/texmf-dist/tex/latex/beamer/beamericonarticle.pdf>]
 \tf@nav=\write6
 \openout6 = `main.nav'.
 
@@ -1182,38 +1117,36 @@ Package pdftex.def Info: hopkinslogo.jpg  used on input line 344.
 \tf@snm=\write8
 \openout8 = `main.snm'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 344.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 344.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 468.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 468.
  (./main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 344.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 344.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 468.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 468.
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 22541 strings out of 492649
- 469057 string characters out of 6129622
- 565052 words of memory out of 5000000
- 25857 multiletter control sequences out of 15000+600000
- 23923 words of font info for 53 fonts, out of 8000000 for 9000
+ 22550 strings out of 492649
+ 469847 string characters out of 6129622
+ 564818 words of memory out of 5000000
+ 25874 multiletter control sequences out of 15000+600000
+ 21446 words of font info for 48 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 56i,15n,67p,790b,802s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 56i,15n,67p,800b,718s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
 exlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/te
 xlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/tex
-live/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texli
-ve/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive
-/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/20
-18/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/201
-8/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2018/
-texmf-dist/fonts/type1/public/amsfonts/symbols/msam7.pfb></usr/local/texlive/20
-18/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2018/texm
-f-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2018/texmf-dist/
-fonts/type1/urw/helvetic/uhvro8a.pfb>
-Output written on main.pdf (22 pages, 2301009 bytes).
+live/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texli
+ve/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive
+/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2
+018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2018
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2018/
+texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2018/texmf-d
+ist/fonts/type1/urw/helvetic/uhvr8a.pfb>
+Output written on main.pdf (19 pages, 1192691 bytes).
 PDF statistics:
- 686 PDF objects out of 1000 (max. 8388607)
- 622 compressed objects within 7 object streams
- 48 named destinations out of 1000 (max. 500000)
- 108 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 283 PDF objects out of 1000 (max. 8388607)
+ 163 compressed objects within 2 object streams
+ 39 named destinations out of 1000 (max. 500000)
+ 151 words of extra memory for PDF output out of 10000 (max. 10000000)
 
