@@ -1842,6 +1842,103 @@ def cluster(args):
     plt.close()
     return None
 
+def generate_figures(args):
+
+    orig_dir = args.images
+    xy_dir = args.coords
+    nfft = args.nfft
+    figurename=args.outdir
+    
+    filenames = os.listdir(xy_dir)
+    organoids = [f.split('.')[0] for f in filenames if not f.startswith('.')]
+            
+    plotfile = os.path.join(figurename + '.pdf')
+    pdf = PdfPages(plotfile)
+
+    k_vector = np.arange(1 + (nfft/2)) # since rfft uses only half the range
+    k_sq = k_vector * k_vector # element multiply
+
+    fac = 2.0 * math.pi / float(nfft)
+    facsq = fac * fac
+    smooth = np.exp(-facsq * k_sq)
+    
+    nrow = len(organoids)
+    ncol = 4
+
+    plt.figure(figsize=(25, nrow * ncol))
+    
+    rownum = 0
+
+    for k in organoids:
+        # k14 begin
+        logger.info('... %s', k)
+        
+        xy_file = os.path.join(xy_dir, k + '.txt')
+        (xy_raw, xy_interp, xy_hat, tot_length, area, form_factor, power_norm) = xyfile_to_spectrum(xy_file, nfft)
+        power_norm = power_norm * smooth
+        power_ksq = power_norm * k_sq
+        sumpower = sum(power_norm[2:])
+        sumpowerksq = sum(power_ksq[2:])
+
+        fullpath = os.path.join(orig_dir, k + '.tif')
+        (img_dic, img_k14, scale, tag_photometric, tag_color) = read_image_pair(fullpath)
+        
+        # all the plots
+        rownum += 1
+        i = (rownum - 1) * ncol # plot sequence number starting point
+
+        # K14 image
+        i += 1
+        plt.subplot(nrow, ncol, i)
+        plt.imshow(img_k14)
+        plt.title('K14 Image')
+        #plt.ylabel('%s' % k)
+
+        # DIC image
+        i += 1
+        plt.subplot(nrow, ncol, i)
+        plt.title('DIC Image')
+        plt.imshow(img_dic)
+
+        # boundary from raw points
+        i += 1
+        ax = plt.subplot(nrow, ncol, i)
+        # make sure the path is closed
+        x = list(xy_raw[:,0])
+        y = list(xy_raw[:,1])
+        x.append(x[0])
+        y.append(y[0])
+        xx = [ scale * val for val in x ]
+        yy = [ scale * val for val in y]
+        plt.plot(xx, yy, 'k', label='Boundary')
+        #plt.scatter(scale * xy_interp[:,0], scale * xy_interp[:,1], facecolors='none', edgecolors='b')
+        # ax.axis('equal')
+        plt.imshow(img_dic, alpha=0.5)
+        ax.set_xlim(0, img_dic.shape[1] - 1)
+        ax.set_ylim(0, img_dic.shape[0] - 1)
+        #ax.set_aspect('auto')
+        plt.title('Boundary')
+        plt.gca().invert_yaxis()
+        
+        # power spectrum
+        i += 1
+        plt.subplot(nrow, ncol, i)
+        x = range(len(power_norm))
+        # logger.info('len(x) %d len(pwr) %d', len(x), len(power_norm))
+        # plt.plot(x[2:], power_norm[2:], 'k')
+        plt.plot(x[2:], power_ksq[2:], 'b')
+        plt.xlabel('Frequency')
+        plt.ylabel('Power k^2')
+        plt.title('Spectral AUC = %.3f' % (sumpowerksq))
+        #plt.subplots_adjust(top=0.7, hspace=.5)
+
+    plt.tight_layout()
+    pdf.savefig()
+    plt.close()
+    pdf.close()
+
+    return None  
+
 def main():
     parser = argparse.ArgumentParser(description='Stack 2D images make a 3D rendering', epilog='', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--datafolder', help='input directory with all the data', required=True)
@@ -1858,6 +1955,7 @@ def main():
     parser.add_argument('--test', help='test to see if images and boundaries match', choices=['y','n'], required=False, default='n')
     parser.add_argument('--filenumber', help='filenumber to test', type=str, required=False, default=1)
     parser.add_argument('--combineimgs', help='combine DIC and K14 images', choices=['y','n'], required=False, default='n')
+    parser.add_argument('--generate_figures', help='combine DIC and K14 images', choices=['y','n'], required=False, default='n')
     args = parser.parse_args()
 
 
@@ -1869,6 +1967,10 @@ def main():
         combine_images(args.datafolder, args.outdir)
         return None
 
+    if (args.generate_figures=='y'):
+        logger.info('Generating figures ...')
+        generate_figures(args)
+        return None
 
     if (not os.path.isdir(args.outdir)):
         logger.info('creating output directory %s', args.outdir)
@@ -1887,6 +1989,7 @@ def main():
         logger.info('calculating invasion vs. K14 ...')
         result_dic = calc_inv_vs_k14(args)
         return None
+
     
     picklefile = os.path.join(args.outdir, 'calculate.pkl')
     prot = cPickle.HIGHEST_PROTOCOL

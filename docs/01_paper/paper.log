@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  15 NOV 2018 15:11
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  15 NOV 2018 16:57
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -290,17 +290,22 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <9> not available
 {/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 89.
+<Image1.pdf, id=19, 1806.75pt x 867.24pt>
+File: Image1.pdf Graphic file (type pdf)
+<use Image1.pdf>
+Package pdftex.def Info: Image1.pdf  used on input line 93.
+(pdftex.def)             Requested size: 347.12354pt x 166.6167pt.
  [2]
-Excluding 'comment' comment. [3] (./paper.aux)
+Excluding 'comment' comment. [3 <./Image1.pdf>] (./paper.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 2409 strings out of 492649
- 32421 string characters out of 6129622
- 108523 words of memory out of 5000000
- 6263 multiletter control sequences out of 15000+600000
+ 2415 strings out of 492649
+ 32520 string characters out of 6129622
+ 108531 words of memory out of 5000000
+ 6268 multiletter control sequences out of 15000+600000
  10819 words of font info for 38 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  41i,8n,35p,1283b,229s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -320,10 +325,10 @@ e/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive
 /2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2
 018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/201
 8/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on paper.pdf (3 pages, 168619 bytes).
+Output written on paper.pdf (3 pages, 1228390 bytes).
 PDF statistics:
- 78 PDF objects out of 1000 (max. 8388607)
- 56 compressed objects within 1 object stream
+ 149 PDF objects out of 1000 (max. 8388607)
+ 74 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 6 words of extra memory for PDF output out of 10000 (max. 10000000)
 
