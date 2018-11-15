@@ -3,6 +3,7 @@
 %
 \usepackage{graphicx}
 \usepackage{comment}
+\usepackage{xcolor}
 % Used for displaying a sample figure. If possible, figure files should
 % be included in EPS format.
 %
@@ -34,7 +35,7 @@ Other\\
 \maketitle              % typeset the header of the contribution
 %
 \begin{abstract}
-Metastasis is the main predictor of outcome for patients with cancer, yet the molecular mechanism driving invasive phenotypes is not well understood. Keratin 14 (K14) is a known molecular biomarker that is correlated with poor outcomes in breast cancer patients. In this study, we apply our automated computer model that quantifies the invasive potential of tumors to characterize K14 expression as it relates to invasion. We test the hypothesis that K14 is directly correlated to invasion versus the alternative hypothesis that size is the main predictor. We used two different transgenic mice as our breast cancer tumor models. Organoids were generated from these mice, and each organoid had a corresponding differential interference contrast image, K14 image, and an invasive potential score generated using our automated system. The parameters assessed include the following: entire K14 expression, peripheral K14 expression (edges of the organoid), central K14 expression (center of the organoid), and organoid size. Peripheral K14 expression showed the strongest correlation with invasion scores for both types of transgenic mice. The results suggest that K14 expression in cells located in the periphery may be an important marker of invasion.
+Metastasis is the main predictor of outcome for patients with cancer, yet the molecular mechanism driving invasive phenotypes is not well understood. Keratin 14 (K14) is a known molecular biomarker that is correlated with poor outcomes in breast cancer patients. In this study, we apply our automated computer model that quantifies the invasive potential of tumors to characterize K14 expression as it relates to invasion. We test the hypothesis that K14 is directly correlated to invasion versus the alternative hypothesis that size is the main predictor. We used two different transgenic mice (PyMT and C3(1)-Tag) as our breast cancer tumor models. Organoids were generated from these mice, and each organoid had a corresponding differential interference contrast image, K14 image, and an invasive potential score generated using our automated system. The parameters assessed include the following: entire K14 expression, peripheral K14 expression (edges of the organoid), central K14 expression (center of the organoid), and organoid size. Peripheral K14 expression showed the strongest correlation with invasion scores for both types of transgenic mice. The results suggest that K14 expression in cells located in the periphery may be an important marker of invasion.
 
 \keywords{Metastasis \and Tumor Invasion \and Keratin 14 \and Spectral Analysis \and ...}
 \end{abstract}
@@ -43,10 +44,49 @@ Metastasis is the main predictor of outcome for patients with cancer, yet the mo
 %
 \section{Introduction}
 
+Alternative title: Morphological features of organoid invasion are correlated to membrane-localized Keratin-14 expression
+
+\textcolor{blue}{
+\begin{itemize}
+    \item Biology intro (what is our audience). The two different mice models.
+    \item How K14 expression is related to metastasis.
+    \item The use of image analysis for feature extraction, lit review.
+    \item Why spectral score is a good measure for invasion potential.
+    \item Paper outline
+\end{itemize}
+}
+
+Metastasis stats.
+
+What are organoids.
+
+Quantitative phenotypes.
+
+
+Hypothesis: a) K14 expression is correlated with organoid invasion.\\
+b) organoid size is correlated with invasion score.
+
+Research questions:
+
+
 \section {Methods}
-    
+
+Fig. 0: Make figure showing the 'pipeline'.
+
+\textcolor{blue}{
+\begin{itemize}
+    \item Experimental protocol. Ask Veena to write this part.\\ 
+        100-300 organoids from 4 mice.
+    \item Image acquisition and organoid periphery. Veena.\\
+        Use ImageJ to mark the periphery of the organoids from DCI microscop images.
+    \item Image segmentation. Andrei to write about convolution kernel.
+    \item Spectral score. Reference Joel's paper. Disclose scripts?
+\end{itemize}
+}
 
 \subsection{Database}
+
+ A total of 4 PyMT and 4 C31T mice were used to generate a total of \{\} organoids, which were then cultured in collagen I gels for 5 days. At day 5, they were imaged, an average of 16 per sample. Differential interference contrast (DIC) microscopy yielded 1040$\times$1388 pixel images. Microscope optics defined a resolution of 0.51190476 $\mu$m per pixel, corresponding to a 532.4$\times$710.5 $\mu$m field of view. Images were manually tracked in {\sc ImageJ} \cite{Schneider:2012ui} to define the organoid boundaries as pairs of points $\{x_v,y_v\}$ for $v \in [0,V-1]$. The total number of points $V$ depended on the manual tracking, and the spacing between adjacent points was similarly variable.
 
 \subsection{Spectral Analysis}
 
@@ -54,12 +94,31 @@ Metastasis is the main predictor of outcome for patients with cancer, yet the mo
 
 \section{Results}
 
+Start adding figures here.\\
+Q: Are we keeping the large vs. small organoids?
+Q: should this be split into PyMT section and C31Tag section?
+
+Fig. 1: show each step in the pipeline from DCI to spectral score for 2 organoids (one with low spectral score and one with high spectral score).
+
+Fig. 2: show figures for the convolution kernel used to get peripheral K14 expression.
+
+Fig. 3: Correlation plots PyMT
+
+Fig. 4: Correlation plots C31Tag
+
+Table 1: Summary statistics
+
 \section{Discussion}
+
+Future directions: Test our method on Patient derived organoids, PDOs.\\
+Does organoid invasion score correlate with patient outcome?
 
 \section{Conclusion}
 
-\paragraph{}
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{comment}
 \begin{table}
 \caption{Table captions should be placed above the
@@ -125,28 +184,18 @@ and a homepage~\cite{ref_url1}. Multiple citations are grouped
 % \bibliographystyle{splncs04}
 % \bibliography{mybibliography}
 %
-\begin{thebibliography}{8}
-\bibitem{ref_article1}
-Author, F.: Article title. Journal \textbf{2}(5), 99--110 (2016)
-
-\bibitem{ref_lncs1}
-Author, F., Author, S.: Title of a proceedings paper. In: Editor,
-F., Editor, S. (eds.) CONFERENCE 2016, LNCS, vol. 9999, pp. 1--13.
-Springer, Heidelberg (2016). \doi{10.10007/1234567890}
-
-\bibitem{ref_book1}
-Author, F., Author, S., Author, T.: Book title. 2nd edn. Publisher,
-Location (1999)
-
-\bibitem{ref_proc1}
-Author, A.-B.: Contribution title. In: 9th International Proceedings
-on Proceedings, pp. 1--2. Publisher, Location (2010)
-
-\bibitem{ref_url1}
-LNCS Homepage, \url{http://www.springer.com/lncs}. Last accessed 4
-Oct 2017
-\end{thebibliography}
 
 \end{comment}
+
+\begin{thebibliography}{8}
+
+\bibitem{Schneider:2012ui}
+Schneider CA, Rasband WS, Eliceiri KW.
+\newblock {NIH Image to ImageJ: 25 years of image analysis.}
+\newblock Nature methods. 2012;9(7):671--675.
+
+\end{thebibliography}
+
+
 
 \end{document}
