@@ -44,7 +44,7 @@ Metastasis is the main predictor of outcome for patients with cancer, yet the mo
 %
 \section{Introduction}
 
-Alternative title: Morphological features of organoid invasion are correlated to membrane-localized Keratin-14 expression
+Alternative title: Morphological features of organoid invasion are correlated with membrane-localized Keratin-14 expression
 
 \textcolor{blue}{
 \begin{itemize}
@@ -62,6 +62,7 @@ What are organoids.
 
 Quantitative phenotypes.
 
+Previous observation from Ewald group about K14 expression.
 
 Hypothesis: a) K14 expression is correlated with organoid invasion.\\
 b) organoid size is correlated with invasion score.
@@ -78,25 +79,82 @@ Fig. 0: Make figure showing the 'pipeline'.
     \item Experimental protocol. Ask Veena to write this part.\\ 
         100-300 organoids from 4 mice.
     \item Image acquisition and organoid periphery. Veena.\\
-        Use ImageJ to mark the periphery of the organoids from DCI microscop images.
+        Use ImageJ to mark the periphery of the organoids from DIC microscope images.
     \item Image segmentation. Andrei to write about convolution kernel.
     \item Spectral score. Reference Joel's paper. Disclose scripts?
 \end{itemize}
 }
 
-\subsection{Dataset}
+\subsection{Data acquisition}
 
  A total of 4 PyMT and 4 C31T mice were used to generate a total of \{\} organoids, which were then cultured in collagen I gels for 5 days. At day 5, they were imaged, an average of 16 per sample. Differential interference contrast (DIC) microscopy yielded 1040$\times$1388 pixel images. Microscope optics defined a resolution of 0.51190476 $\mu$m per pixel, corresponding to a 532.4$\times$710.5 $\mu$m field of view. Images were manually tracked in {\sc ImageJ} \cite{Schneider:2012ui} to define the organoid boundaries as pairs of points $\{x_v,y_v\}$ for $v \in [0,V-1]$. The total number of points $V$ depended on the manual tracking, and the spacing between adjacent points was similarly variable.
 
+
 \subsection{Spectral Analysis}
+A method described in REF.\\
+Able to distinguish quantitative phenotypes.
+
+\subsection{Convolution kernel}
+ANDREI
+
+\subsection{Correlation Analysis}
+
 \begin{figure}
 \includegraphics[width=\textwidth]{Image1.pdf}
-\caption{Displays the K14 Image, DIC image, Bounday and spectral power analysis plots for three different organoids.} \label{fig1}
+\caption{Displays the K14 Image, DIC image, Bounday and spectral power analysis plots for three different organoids. \textcolor{red}{Axis font needs to be bigger. Y-axis in spectral score should all be the same and we can probably skip column 2.}} \label{fig1}
 \end{figure}
 
-\subsubsection{}
+
 
 \section{Results}
+
+\begin{table}
+\caption{Peripheral K14 explains correlates with invasive potential the best.}\label{tab1}
+		\centering
+		\resizebox{0.8\textwidth}{!}{
+		 \begin{tabular}{||l c c c c||}
+			\hline
+			 & \multicolumn{4}{|c|}{$r^2$ by mouse} \\
+			 \hline
+			 Organoids (PyMMT mice) & 	1 & 2 & 3 & 4 \\ [0.5ex]
+			 \hline\hline
+			  \textbf{Peripheral sum K14} & \textbf{0.39} & \textbf{0.43} & \textbf{0.29} & \textbf{0.123} \\
+			 \hline
+			 Centeral sum K14 & 0.21 & 0.19 & 0.11 & 0.010 \\
+			 \hline
+			 Entire sum K14 & 0.22 & 0.22 & 0.12 & 0.013 \\
+			 \hline
+%			 K14 Mean & 0.02 & 0.04 & 0.03 \\ [1ex]
+%			 \hline
+			Organoid size & 0.27 & 0.33 & 0.27 & 0.076 \\
+			 \hline
+		\end{tabular}
+		}
+\end{table}
+
+\begin{table}
+\caption{Peripheral K14 explains correlates with invasive potential the best.}\label{tab1}
+		\centering
+		\resizebox{0.8\textwidth}{!}{
+		 \begin{tabular}{||l c c c c||}
+			\hline
+			 & \multicolumn{4}{|c|}{$r^2$ by mouse} \\
+			 \hline
+			 Organoids (C3(1)tag mice) & 1 & 2 & 3 & 4  \\ [0.5ex]
+			 \hline\hline
+			  \textbf{Peripheral sum K14} & \textbf{0.11} & \textbf{0.25} & 0.06 & 0.03 \\
+			 \hline
+			 Centeral sum K14 & 0.01 & 0.03 & 0.06 & 0.00\\
+			 \hline
+			 Entire sum K14 & 0.01 & 0.00 & 0.01 & 0.00\\
+			 \hline
+%			 K14 Mean & 0.02 & 0.04 & 0.03 & xx\\ [1ex]
+%			 \hline
+			Organoid size & 0.07 & 0.01 & \textbf{0.07} &  \textbf{0.06} \\
+			 \hline
+		\end{tabular}
+		}
+\end{table}
 
 Start adding figures here.\\
 Q: Are we keeping the large vs. small organoids?
@@ -113,7 +171,9 @@ Fig. 4: Correlation plots C31Tag
 Table 1: Summary statistics
 
 \section{Discussion}
-
+We implemented a method to quanitfy the invasive phenotypes organoids derived from two distinct mouse models, namely PyMT and C3(1)tag.\\
+Out of the features we tested, we found that peripheral K14 expression correlated with the invasive phenotype.\\
+Why is this important and/or interesting?\\
 Future directions: Test our method on Patient derived organoids, PDOs.\\
 Does organoid invasion score correlate with patient outcome?
 
