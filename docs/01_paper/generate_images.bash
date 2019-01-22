@@ -1,16 +1,16 @@
 #!/bin/bash
 
-if [ $# -lt 3 ];
+if [ $# -lt 4 ];
 then
-	echo "Usage: DATASET [PyMT|C31T] MOUSE [1|2|3|4] IMAGENAME [Image1|Image2...] ORGLIST [1 2 3 ...]"
+	echo "Usage: DATASET [PyMT|C31T] MOUSE [1|2|3|4] IMAGENAME [Image1|Image2...] RUN [plots|figures] ORGLIST [1 2 3 ...]"
 	exit 1
 fi
 
-RUN="generate_figures"
+RUN="generate_${4}"
 DATASET=$1
 o=$2
 IMAGENAME=$3
-ORGS=($(echo "${@:4}"))
+ORGS=($(echo "${@:5}"))
 DAYNUM=5
 
 
