@@ -27,6 +27,7 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import matplotlib.lines as mlines
 from matplotlib.patches import Polygon
+from matplotlib.collections import PatchCollection
 
 from skimage.restoration import unwrap_phase
 
@@ -828,7 +829,7 @@ def write_boundary_thumbnails(outdir, results_dict, points_dict):
     titles = ['Boundaries, All']
     filenames = [ 'thumbnails_boundaries_all.pdf']
     edgecolors = [ 'none' ]
-    
+                
     for (myorder, mytitle, myfilename, myedgecolor) in zip(orders, titles, filenames, edgecolors):
         
         plt.figure(figsize=FIGSIZE)
@@ -1863,10 +1864,10 @@ def generate_figures(args):
     smooth = np.exp(-facsq * k_sq)
     
     nrow = len(organoids)
-    ncol = 4
+    ncol = 3
 
-    plt.figure(figsize=(25, nrow * ncol))
-    
+    plt.figure(figsize=(15, nrow * ncol))
+    plt.rcParams.update({'font.size': 14})
     rownum = 0
 
     for k in organoids:
@@ -1891,14 +1892,17 @@ def generate_figures(args):
         i += 1
         plt.subplot(nrow, ncol, i)
         plt.imshow(img_k14)
-        plt.title('K14 Image')
-        #plt.ylabel('%s' % k)
+        plt.title('K14 Image', fontsize=18)
+        plt.ylabel('pixel')
+        plt.xlabel('pixel')
 
         # DIC image
-        i += 1
-        plt.subplot(nrow, ncol, i)
-        plt.title('DIC Image')
-        plt.imshow(img_dic)
+        #i += 1
+        #plt.subplot(nrow, ncol, i)
+        #plt.title('DIC Image', fontsize=18)
+        #plt.imshow(img_dic)
+        #plt.ylabel('pixel')
+        #plt.xlabel('pixel')
 
         # boundary from raw points
         i += 1
@@ -1911,33 +1915,437 @@ def generate_figures(args):
         xx = [ scale * val for val in x ]
         yy = [ scale * val for val in y]
         plt.plot(xx, yy, 'k', label='Boundary')
+        plt.ylabel('pixel')
+        plt.xlabel('pixel')
         #plt.scatter(scale * xy_interp[:,0], scale * xy_interp[:,1], facecolors='none', edgecolors='b')
         # ax.axis('equal')
         plt.imshow(img_dic, alpha=0.5)
         ax.set_xlim(0, img_dic.shape[1] - 1)
         ax.set_ylim(0, img_dic.shape[0] - 1)
         #ax.set_aspect('auto')
-        plt.title('Boundary')
+        plt.title('Boundary', fontsize=18)
         plt.gca().invert_yaxis()
         
         # power spectrum
         i += 1
-        plt.subplot(nrow, ncol, i)
+        ax = plt.subplot(nrow, ncol, i)
         x = range(len(power_norm))
         # logger.info('len(x) %d len(pwr) %d', len(x), len(power_norm))
         # plt.plot(x[2:], power_norm[2:], 'k')
         plt.plot(x[2:], power_ksq[2:], 'b')
         plt.xlabel('Frequency')
         plt.ylabel('Power k^2')
-        plt.title('Spectral AUC = %.3f' % (sumpowerksq))
-        #plt.subplots_adjust(top=0.7, hspace=.5)
+        plt.title('Spectral AUC = %.3f' % (sumpowerksq), fontsize=18)
+        plt.subplots_adjust(top=0.7, hspace=.5)
 
+    
     plt.tight_layout()
     pdf.savefig()
     plt.close()
     pdf.close()
 
     return None  
+
+def generate_plots(args):
+
+    orig_dir = args.images
+    xy_dir = args.coords
+    nfft = args.nfft
+    outdir = args.outdir
+    
+    filenames = os.listdir(xy_dir)
+    org_id = [f.split('.')[0] for f in filenames if not f.startswith('.')]
+
+    ctn_list = org_id
+    ctn_list.sort(key=float)
+    #ctn_list.sort()
+
+    k_vector = np.arange(1 + (nfft/2)) # since rfft uses only half the range
+    k_sq = k_vector * k_vector # element multiply
+
+    fac = 2.0 * math.pi / float(nfft)
+    facsq = fac * fac
+    smooth = np.exp(-facsq * k_sq)
+    
+    organoids = ctn_list
+    #nrow = len(ctn_list)
+    ncol = 3
+
+    ff_list = [ ]
+    sumpower_list = [ ]
+    sumpowerksq_list = [ ]
+    k14mean_list = [ ]
+    k14_edge_mean_list = [ ]
+    k14_center_mean_list = [ ]
+    k14sum_list = [ ]
+    k14sum_edge_list = [ ]
+    k14sum_center_list = [ ]
+    k14veena_list = [ ]
+    area_list = [ ]
+    sizefrac_list = [ ]
+
+    boundary = dict()
+
+    for k in organoids:
+        # k14 begin
+        logger.info('... %s', k)
+        
+        xy_file = os.path.join(xy_dir, k + '.txt')
+        (xy_raw, xy_interp, xy_hat, tot_length, area, form_factor, power_norm) = xyfile_to_spectrum(xy_file, nfft)
+        power_norm = power_norm * smooth
+        power_ksq = power_norm * k_sq
+        sumpower = sum(power_norm[2:])
+        sumpowerksq = sum(power_ksq[2:])
+
+        fullpath = os.path.join(orig_dir, k + '.tif')
+        (img_dic, img_k14, scale, tag_photometric, tag_color) = read_image_pair(fullpath)
+        
+        size_area = scale * scale * area
+        size_perimeter = scale * tot_length
+
+        # extract k14 intensity from image
+        (img_fill, fill_np) = create_boundary(img_k14, xy_interp, scale, 'fill')
+        pixels_inside = img_k14[ fill_np > 0 ]
+        pixels_outside = img_k14[ fill_np == 0 ]
+
+        # extract k14 intensity from image for peripheral and central pixels
+        (edge_mask, center_mask) = get_edge_pixles(img_k14, xy_interp, scale)
+        pixels_inside_peripheral_mask = img_k14[edge_mask > 0]
+        pixels_inside_central_mask = img_k14[center_mask > 0]
+        k14sum_edge = np.sum(pixels_inside_peripheral_mask.ravel())
+        k14sum_center = np.sum(pixels_inside_central_mask.ravel())
+        
+        k14sum = np.sum(pixels_inside.ravel())
+        k14mean = np.mean(pixels_inside.ravel())
+        k14mean_edge = np.mean(pixels_inside_peripheral_mask.ravel())
+        k14mean_center = np.mean(pixels_inside_central_mask.ravel())
+        ninside = len(pixels_inside.ravel())
+        ntotal = len(img_k14.ravel())
+        # logger.info('%s %d pixels, sum = %f, mean = %f', k, ninside, k14sum, k14mean)
+        if (tag_photometric == '1'):
+            k14mean = 255.0 - k14mean
+            k14mean_edge = 255.0 - k14mean_edge
+            k14mean_center = 255.0 - k14mean_center
+            k14sum = (255.0 * ninside) - k14sum
+            k14sum_edge = (255.0 * ninside) - k14sum_edge
+            k14sum_center = (255.0 * ninside) - k14sum_center
+            # logger.info('-> %d pixels, sum = %f, mean = %f', ninside, k14sum, k14mean)
+        k14sum = k14sum / float(ntotal * 255)
+        k14sum_edge = k14sum_edge / float(ntotal * 255)
+        k14sum_center = k14sum_center / float(ntotal * 255)
+        k14mean = k14mean / 255.0
+        k14mean_edge = k14mean_edge / 255.0
+        k14mean_center = k14mean_center / 255.0
+        # logger.info('k14 mean %f, k14sum normalized %f for %d total pixels', k14mean, k14sum, ntotal)            
+
+        size_npixel = ninside
+        if (tag_color == 'rgb'):
+            size_npixel = size_npixel / 3.0
+        size_frac = float(ninside)/float(ntotal)
+
+        ff_list.append(form_factor)
+        sumpower_list.append(sumpower)
+        sumpowerksq_list.append(sumpowerksq)
+        k14mean_list.append(k14mean)
+        k14_edge_mean_list.append(k14mean_edge)
+        k14_center_mean_list.append(k14mean_center)
+        k14sum_list.append(k14sum)
+        k14sum_edge_list.append(k14sum_edge)
+        k14sum_center_list.append(k14sum_center)
+        area_list.append(size_area)
+        sizefrac_list.append(size_frac)
+            
+        boundary[k] = xy_interp
+        
+    diam = 3.0 # typical diameter for an organoid scaled to unit circle
+    HEIGHT_OVER_WIDTH = 3.0 / 4.0
+
+    dh = diam
+    dw = diam / HEIGHT_OVER_WIDTH
+
+    #plt.figure(figsize=(25,8))
+       
+    for (suffix, xlist, xname) in zip( ('_FA', '_KS', '_KPS', '_KCS'),
+        (sizefrac_list, k14sum_list, k14sum_edge_list, k14sum_center_list),
+        ('Fractional Area', 'K14 Sum', 'K14 Sum Peripheral Pixels', 'K14 Sum Centeral Pixels') ):
+    
+        plotfile = os.path.join(outdir + suffix + '.pdf')
+        pdf = PdfPages(plotfile)
+        plt.gca().set_aspect('equal')
+        axes = plt.gca()
+        xscale = 100/max(xlist)
+        yscale = 100/max(sumpowerksq_list)
+        for (x1, y1, a1) in zip(xlist, sumpowerksq_list, ctn_list):
+            pts = boundary[a1]
+            dx = x1 * dw
+            dy = y1 * dh
+            newx = pts[:,0]/25 + (dx*xscale)
+            newy = pts[:,1]/25 + (dy*yscale)
+            xy = zip(newx, newy)
+            axes.add_patch(Polygon(xy, facecolor='none', closed=True, edgecolor='blue', alpha=0.5) )
+            plt.xlabel(xname)
+            plt.ylabel('Invasion')
+            (r, pval) = pearsonr(xlist, sumpowerksq_list)
+            rsq = r*r
+            plt.title('Rsq = %.3f, pval = %.3g' % (rsq, pval))
+
+        axes.autoscale_view()    
+        plt.tight_layout()
+        pdf.savefig()
+        plt.close()
+
+        pdf.close()             
+
+    return None
+
+def cluster(args):
+    #K Means initializer
+    num_clusters = 8
+    kms = KMeans(n_clusters=num_clusters, random_state=0)
+    #boundary scale
+    org_scale = 150
+
+    boundary = dict()
+    spectral_power = dict()
+
+    org_dir = args.images
+    xy_dir = args.coords
+    nfft = args.nfft
+    outdir = args.outdir
+    
+    filenames = os.listdir(xy_dir)
+    org_id = [f.split('.')[0] for f in filenames if not f.startswith('.')]
+
+    k_vector = np.arange(1 + (nfft/2)) # since rfft uses only half the range
+    k_sq = k_vector * k_vector # element multiply
+
+    fac = 2.0 * math.pi / float(nfft)
+    facsq = fac * fac
+    smooth = np.exp(-facsq * k_sq)
+    
+    for k in org_id:
+        xy_file = os.path.join(xy_dir, k + '.txt')
+        (xy_raw, xy_interp, xy_hat, tot_length, area, form_factor, power_norm) = xyfile_to_spectrum(xy_file, nfft)
+        power_norm = power_norm * smooth
+        power_ksq = power_norm * k_sq
+        sumpower = sum(power_norm[2:])
+        sumpowerksq = sum(power_ksq[2:])
+
+        #fullpath = os.path.join(org_dir, k + '.tif')
+        #(img_dic, img_k14, scale, tag_photometric, tag_color) = read_image_pair(fullpath)
+        #
+        #size_area = scale * scale * area
+        #size_perimeter = scale * tot_length
+
+        ## extract k14 intensity from image
+        #(img_fill, fill_np) = create_boundary(img_k14, xy_interp, scale, 'fill')
+        #pixels_inside = img_k14[ fill_np > 0 ]
+        #pixels_outside = img_k14[ fill_np == 0 ]
+
+        ## extract k14 intensity from image for peripheral and central pixels
+        #(edge_mask, center_mask) = get_edge_pixles(img_k14, xy_interp, scale)
+        #pixels_inside_peripheral_mask = img_k14[edge_mask > 0]
+        #pixels_inside_central_mask = img_k14[center_mask > 0]
+        #k14sum_edge = np.sum(pixels_inside_peripheral_mask.ravel())
+        #k14sum_center = np.sum(pixels_inside_central_mask.ravel())
+        #
+        #k14sum = np.sum(pixels_inside.ravel())
+        #k14mean = np.mean(pixels_inside.ravel())
+        #k14mean_edge = np.mean(pixels_inside_peripheral_mask.ravel())
+        #k14mean_center = np.mean(pixels_inside_central_mask.ravel())
+        #ninside = len(pixels_inside.ravel())
+        #ntotal = len(img_k14.ravel())
+        ## logger.info('%s %d pixels, sum = %f, mean = %f', k, ninside, k14sum, k14mean)
+        #if (tag_photometric == '1'):
+        #    k14mean = 255.0 - k14mean
+        #    k14mean_edge = 255.0 - k14mean_edge
+        #    k14mean_center = 255.0 - k14mean_center
+        #    k14sum = (255.0 * ninside) - k14sum
+        #    k14sum_edge = (255.0 * ninside) - k14sum_edge
+        #    k14sum_center = (255.0 * ninside) - k14sum_center
+        #    # logger.info('-> %d pixels, sum = %f, mean = %f', ninside, k14sum, k14mean)
+        #k14sum = k14sum / float(ntotal * 255)
+        #k14sum_edge = k14sum_edge / float(ntotal * 255)
+        #k14sum_center = k14sum_center / float(ntotal * 255)
+        #k14mean = k14mean / 255.0
+        #k14mean_edge = k14mean_edge / 255.0
+        #k14mean_center = k14mean_center / 255.0
+        ## logger.info('k14 mean %f, k14sum normalized %f for %d total pixels', k14mean, k14sum, ntotal)            
+
+        #size_npixel = ninside
+        #if (tag_color == 'rgb'):
+        #    size_npixel = size_npixel / 3.0
+        #size_frac = float(ninside)/float(ntotal)
+
+        boundary[k] = xy_interp
+        power_ksq = get_power(xy_hat)
+        spectral_power[k] = np.array(power_ksq[2:]).astype(np.float)
+        #spectral_power[k] = np.append(spectral_power[k], k14sum_edge)
+
+    cls = kms.fit(spectral_power.values())
+
+    diam = 3.0 # typical diameter for an organoid scaled to unit circle
+    HEIGHT_OVER_WIDTH = 3.0 / 4.0
+    FIGSIZE = (12, 9)
+    
+    # order by class
+    classes = dict()
+    number_of_features = spectral_power[k].size
+    for c in range(0, num_clusters):
+        classes[str(c)] = [ k for k in boundary.keys() if (cls.predict(spectral_power[k].reshape(1,number_of_features)) == c)]
+
+    byname = sorted(boundary.keys())
+    tups = [ (cls.predict(spectral_power[k].reshape(1,number_of_features)), k) for k in byname ]
+    tups = sorted(tups)
+    byclass = [ t[1] for t in tups ]
+
+    class_tot = len(classes.keys())
+    colors = mpcm.rainbow(np.linspace(0,1,class_tot))
+    class2color = dict(zip(classes.keys(), colors))
+
+    nside = int(math.ceil(math.sqrt(class_tot)))
+    dh = diam
+    dw = diam / HEIGHT_OVER_WIDTH
+
+    plt.figure(figsize=FIGSIZE)
+    plt.title('Clusters')
+    plt.gca().set_aspect('equal')
+    axes = plt.gca()
+    myclass = 0
+    for c in range(0, len(classes.keys())):
+        cnt = 0
+        cluster_length = len(classes[str(c)])
+        nside = int(math.ceil(math.sqrt(cluster_length)))
+        for (k) in classes[str(c)]:
+            pts = boundary[k]
+            row = cnt // nside
+            col = (cnt % nside) + myclass
+            dx = col * dw
+            dy = row * dh
+            newx = pts[:,0]/org_scale + dx
+            newy = pts[:,1]/org_scale + dy
+            xy = zip(newx, newy)
+            axes.add_patch(Polygon(xy, closed=True, facecolor=class2color[str(c)], edgecolor='none') )
+            cnt = cnt + 1
+        myclass = myclass + nside
+    axes.autoscale_view()    
+    plt.gca().invert_yaxis()
+    plt.axis('off')
+    plt.savefig(os.path.join(outdir, 'cluster.pdf'))
+    plt.close()
+
+    return None
+
+def convolution_demo(args):
+
+    nfft = args.nfft
+    orig_dir = args.images
+    xy_dir = args.coords
+    
+
+    organoid = "183"
+    #nrow = len(ctn_list)
+    ncol = 3
+    
+    xy_file = os.path.join(xy_dir, organoid + '.txt')
+    (xy_raw, xy_interp, xy_hat, tot_length, area, form_factor, power_norm) = xyfile_to_spectrum(xy_file, nfft)
+
+    fullpath = os.path.join(orig_dir, organoid + '.tif')
+    (img_dic, img_k14, scale, tag_photometric, tag_color) = read_image_pair(fullpath)
+    
+    size_area = scale * scale * area
+    size_perimeter = scale * tot_length
+
+    # extract k14 intensity from image for peripheral and central pixels
+
+    img = rgb2gray(img_k14)
+    (mask, array) = create_boundary(img, xy_interp, scale, 'fill')
+
+    k = disk(30)
+    #convolve mask and normalize output
+    mask_c=ndimage.convolve(mask, k)
+    mask_raw = mask_c
+    mask_c = mask_c/(np.amax(mask_c))
+    #create new mask for edge pixels
+    edge_mask = np.zeros(mask.shape)
+    #remask and threshold to get edge pixels
+    edge_mask[(mask == 1) & (mask_c < 1)] = 1
+    #create new mask for center pixels
+    center_mask = np.zeros(mask.shape)
+    center_mask[mask_c == 1] = 1
+
+    plotfile = os.path.join('conv_demo' + '.pdf')
+    pdf = PdfPages(plotfile)        
+
+    nrows = 3
+    ncols = 2
+    i = 0
+    plt.figure(figsize=(6, nrows * ncols))
+
+    i=i+1
+    ax = plt.subplot(nrows, ncols, i)
+    # make sure the path is closed
+    x = list(xy_raw[:,0])
+    y = list(xy_raw[:,1])
+    x.append(x[0])
+    y.append(y[0])
+    xx = [ scale * val for val in x ]
+    yy = [ scale * val for val in y]
+    plt.plot(xx, yy, 'k', label='Boundary', linewidth=0.5)
+    #plt.scatter(scale * xy_interp[:,0], scale * xy_interp[:,1], facecolors='none', edgecolors='b')
+    # ax.axis('equal')
+    plt.imshow(img_dic, alpha=0.5)
+    ax.set_xlim(0, img_dic.shape[1] - 1)
+    ax.set_ylim(0, img_dic.shape[0] - 1)
+    #ax.set_aspect('auto')
+    plt.title('Boundary')
+    plt.gca().invert_yaxis()
+    plt.axis('off')
+
+    i=i+1
+    plt.subplot(nrows, ncols, i)
+    plt.imshow(img_dic)
+    plt.imshow(mask, alpha = 0.5)    
+    plt.title('Organoid Mask')
+    plt.axis('off')
+
+    i=i+1
+    plt.subplot(nrows, ncols, i)
+    plt.imshow(img_dic)
+    plt.imshow(mask_raw, alpha = 0.5)
+    plt.title('Convolved Mask')
+    plt.axis('off')
+        
+    i=i+1
+    plt.subplot(nrows, ncols, i)
+    plt.imshow(img_dic)
+    plt.imshow(mask_c, alpha = 0.5)
+    plt.title('Normalized Convolved Mask')
+    plt.axis('off')
+
+    i=i+1
+    plt.subplot(nrows, ncols, i)
+    plt.imshow(img_dic)
+    plt.imshow(edge_mask, alpha = 0.5)
+    plt.plot(xx, yy, linewidth=0.5)
+    plt.title('Peripheral Mask')
+    plt.axis('off')
+
+    i=i+1
+    plt.subplot(nrows, ncols, i)
+    plt.imshow(img_dic)
+    plt.imshow(center_mask, alpha = 0.5)
+    plt.plot(xx, yy, linewidth=0.5)
+    plt.title('Center Mask')
+    plt.axis('off')
+
+    plt.tight_layout()
+    pdf.savefig(transparent=True)
+    plt.close()
+
+    pdf.close()             
+
+    return None
 
 def main():
     parser = argparse.ArgumentParser(description='Stack 2D images make a 3D rendering', epilog='', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -1955,7 +2363,9 @@ def main():
     parser.add_argument('--test', help='test to see if images and boundaries match', choices=['y','n'], required=False, default='n')
     parser.add_argument('--filenumber', help='filenumber to test', type=str, required=False, default=1)
     parser.add_argument('--combineimgs', help='combine DIC and K14 images', choices=['y','n'], required=False, default='n')
-    parser.add_argument('--generate_figures', help='combine DIC and K14 images', choices=['y','n'], required=False, default='n')
+    parser.add_argument('--generate_figures', help='Generate figures', choices=['y','n'], required=False, default='n')
+    parser.add_argument('--generate_plots', help='Generate plots', choices=['y','n'], required=False, default='n')
+    parser.add_argument('--convolution_demo', help='Generate convolution demo', choices=['y','n'], required=False, default='n')
     args = parser.parse_args()
 
 
@@ -1970,6 +2380,16 @@ def main():
     if (args.generate_figures=='y'):
         logger.info('Generating figures ...')
         generate_figures(args)
+        return None
+
+    if (args.generate_plots=='y'):
+        logger.info('Generating plots ...')
+        generate_plots(args)
+        return None
+
+    if (args.convolution_demo=='y'):
+        logger.info('Generating plots ...')
+        convolution_demo(args)
         return None
 
     if (not os.path.isdir(args.outdir)):
