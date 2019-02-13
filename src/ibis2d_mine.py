@@ -431,6 +431,62 @@ def get_pixelsummary(arr):
     ret['mad'] =  mad(arr)
     return(ret)
 
+def read_image_human_orig(fullpath):
+    img_orig = mpimg.imread(fullpath)
+    img_rgb = None
+    tag_color = None
+    if (img_orig.ndim == 3):
+        tag_color = 'rgb'
+        img_rgb = img_orig
+    elif (img_orig.ndim == 2):
+        tag_color = 'gray'
+        myshape = ( img_orig.shape[0], img_orig.shape[1], 3 )
+        img_rgb = np.zeros(myshape)
+        for k in range(3):
+            img_rgb[:,:,k] = img_orig[:,:]
+    else:
+        logger.info('bad shape: %s', str(img_orig.shape))
+        img_rgb = img_orig
+    ny = img_rgb.shape[1]/2
+    orig_left = img_rgb[:, 0:ny, ...]
+    orig_right = img_rgb[:, ny:(2*ny), ...]
+    (img_orig_dic, img_orig_k14) = (orig_left, orig_right)
+    (mydir, filename) = os.path.split(fullpath)
+    if ('CTN024' == filename[:6]):
+        (img_orig_dic, img_orig_k14) = (orig_right, orig_left)
+        
+    tags = get_tags(fullpath)
+    #for t in sorted(tags.keys()):
+    #    logger.info('%s tag %s value %s', t, str(tags[t]))
+    xtag = tags.get('Image XResolution', "1")
+    ytag = tags.get('Image YResolution', "1")
+    samplesperpixel = str(tags['Image SamplesPerPixel'])
+    xresolution = str(xtag)
+    yresolution = str(ytag)
+    if (xresolution != yresolution):
+        logger.warn('%s bad resolution %s %s', fullpath, xresolution, yresolution)
+    #scale = float(xresolution)
+    scale = eval("1.0*" + xresolution) # sometimes scalestr is 122093/62500
+    #logger.info('resolution x %s y %s x %s y %s scale %s scale %s', xtag, ytag, xresolution, yresolution, scalestr, str(scale))
+    
+    phototag = tags.get('Image PhotometricInterpretation', 'NA')
+    pixelmink14 = np.amin(img_orig_k14)
+    pixelmaxk14 = np.amax(img_orig_k14)
+    pixelmindic = np.amin(img_orig_dic)
+    pixelmaxdic = np.amax(img_orig_dic)
+    #logger.info('%s phototag %s before k14 min %d max %d dic min %d max %d', fullpath, phototag, pixelmink14, pixelmaxk14, pixelmindic, pixelmaxdic)
+    if (str(phototag) == '1'):
+        # logger.info('inverting scale')
+        img_orig_k14 = 255 - img_orig_k14
+        img_orig_dic = 255 - img_orig_dic
+    pixelmink14 = np.amin(img_orig_k14)
+    pixelmaxk14 = np.amax(img_orig_k14)
+    pixelmindic = np.amin(img_orig_dic)
+    pixelmaxdic = np.amax(img_orig_dic)
+    #logger.info('%s phototag %s  after k14 min %d max %d dic min %d max %d', fullpath, phototag, pixelmink14, pixelmaxk14, pixelmindic, pixelmaxdic)
+    
+    return(img_orig_dic, img_orig_k14, scale, str(phototag), tag_color)
+
 def read_image_orig(fullpath):
     img_orig = mpimg.imread(fullpath)
     img_rgb = None
@@ -2005,8 +2061,11 @@ def generate_plots(args):
 
         # extract k14 intensity from image
         (img_fill, fill_np) = create_boundary(img_k14, xy_interp, scale, 'fill')
-        pixels_inside = img_k14[ fill_np > 0 ]
-        pixels_outside = img_k14[ fill_np == 0 ]
+        # nomralize image
+        #img_k14 = img_k14.astype(float)
+        #img_k14 = ((img_k14 - img_k14.min()) / img_k14.max(axis=0)) * 255
+        #pixels_inside = img_k14[ fill_np > 0 ]
+        #pixels_outside = img_k14[ fill_np == 0 ]
 
         # extract k14 intensity from image for peripheral and central pixels
         (edge_mask, center_mask) = get_edge_pixles(img_k14, xy_interp, scale)
@@ -2021,17 +2080,20 @@ def generate_plots(args):
         k14mean_center = np.mean(pixels_inside_central_mask.ravel())
         ninside = len(pixels_inside.ravel())
         ntotal = len(img_k14.ravel())
+        nedge_mask = len(pixels_inside_peripheral_mask.ravel())
+        ncenter_mask = len(pixels_inside_central_mask.ravel())
+        e_over_c = float(ncenter_mask/nedge_mask)
         # logger.info('%s %d pixels, sum = %f, mean = %f', k, ninside, k14sum, k14mean)
         if (tag_photometric == '1'):
             k14mean = 255.0 - k14mean
             k14mean_edge = 255.0 - k14mean_edge
             k14mean_center = 255.0 - k14mean_center
             k14sum = (255.0 * ninside) - k14sum
-            k14sum_edge = (255.0 * ninside) - k14sum_edge
-            k14sum_center = (255.0 * ninside) - k14sum_center
+            k14sum_edge = (255.0 * nedge_mask) - k14sum_edge
+            k14sum_center = (255.0 * ncenter_mask) - k14sum_center
             # logger.info('-> %d pixels, sum = %f, mean = %f', ninside, k14sum, k14mean)
         k14sum = k14sum / float(ntotal * 255)
-        k14sum_edge = k14sum_edge / float(ntotal * 255)
+        k14sum_edge = float(k14sum_edge / k14sum_center) * float(e_over_c) # / float(ntotal * 255) #float(nedge_mask) / float(ntotal) #
         k14sum_center = k14sum_center / float(ntotal * 255)
         k14mean = k14mean / 255.0
         k14mean_edge = k14mean_edge / 255.0
@@ -2057,14 +2119,6 @@ def generate_plots(args):
             
         boundary[k] = xy_interp
         
-    diam = 3.0 # typical diameter for an organoid scaled to unit circle
-    HEIGHT_OVER_WIDTH = 3.0 / 4.0
-
-    dh = diam
-    dw = diam / HEIGHT_OVER_WIDTH
-
-    #plt.figure(figsize=(25,8))
-       
     for (suffix, xlist, xname) in zip( ('_FA', '_KS', '_KPS', '_KCS'),
         (sizefrac_list, k14sum_list, k14sum_edge_list, k14sum_center_list),
         ('Fractional Area', 'K14 Sum', 'K14 Sum Peripheral Pixels', 'K14 Sum Centeral Pixels') ):
@@ -2077,10 +2131,8 @@ def generate_plots(args):
         yscale = 100/max(sumpowerksq_list)
         for (x1, y1, a1) in zip(xlist, sumpowerksq_list, ctn_list):
             pts = boundary[a1]
-            dx = x1 * dw
-            dy = y1 * dh
-            newx = pts[:,0]/25 + (dx*xscale)
-            newy = pts[:,1]/25 + (dy*yscale)
+            newx = pts[:,0]/75 + (x1*xscale)
+            newy = pts[:,1]/75 + (y1*yscale)
             xy = zip(newx, newy)
             axes.add_patch(Polygon(xy, facecolor='none', closed=True, edgecolor='blue', alpha=0.5) )
             plt.xlabel(xname)
@@ -2347,6 +2399,103 @@ def convolution_demo(args):
 
     return None
 
+def generate_results_for_human_organoids(args):
+
+    results = dict()
+
+    all_coords = get_files_recursive(args.coords, '*.txt')
+    all_images = get_files_recursive(args.images, '*.tif')
+
+    coord_image_pairs = [ (c, None) for c in all_coords ]
+    (coord_image_pairs, coord_matched, image_matched) = match_coord_image(all_coords, all_images)
+
+    ctn_list = [x[0] for x in coord_image_pairs]
+
+    print (coord_image_pairs)
+
+    for (coord_file, image_file) in coord_image_pairs:
+        
+        key = coord_file
+        results[key] = dict()
+        (ctnnum, annot, daynum, orgnum) = parse_filename(coord_file)
+        for (k, v) in [ ('annot', annot), ('ctnnum', ctnnum), ('daynum', daynum), ('orgnum', orgnum)]:
+            results[key][k] = v
+
+        (xy_raw, xy_interp, xy_hat, tot_length, area, form_factor, power_norm) = xyfile_to_spectrum(coord_file, args.nfft)
+        power_norm = power_norm * smooth
+        power_ksq = power_norm * k_sq
+        sumpower = sum(power_norm[2:])
+        sumpowerksq = sum(power_ksq[2:])
+
+
+        (img_dic, img_k14, scale, tag_photometric, tag_color) = read_image_human_orig(image_file)
+
+        # Extract K14 info
+        (img_fill, fill_np) = create_boundary(img_k14, xy_interp, scale, 'fill')
+        # nomralize image
+        #img_k14 = img_k14.astype(float)
+        #img_k14 = ((img_k14 - img_k14.min()) / img_k14.max(axis=0)) * 255
+        #pixels_inside = img_k14[ fill_np > 0 ]
+        #pixels_outside = img_k14[ fill_np == 0 ]
+
+        # extract k14 intensity from image for peripheral and central pixels
+        (edge_mask, center_mask) = get_edge_pixles(img_k14, xy_interp, scale)
+        pixels_inside_peripheral_mask = img_k14[edge_mask > 0]
+        pixels_inside_central_mask = img_k14[center_mask > 0]
+        k14sum_edge = np.sum(pixels_inside_peripheral_mask.ravel())
+        k14sum_center = np.sum(pixels_inside_central_mask.ravel())
+        
+        k14sum = np.sum(pixels_inside.ravel())
+        k14mean = np.mean(pixels_inside.ravel())
+        k14mean_edge = np.mean(pixels_inside_peripheral_mask.ravel())
+        k14mean_center = np.mean(pixels_inside_central_mask.ravel())
+        ninside = len(pixels_inside.ravel())
+        ntotal = len(img_k14.ravel())
+        nedge_mask = len(pixels_inside_peripheral_mask.ravel())
+        ncenter_mask = len(pixels_inside_central_mask.ravel())
+        e_over_c = float(ncenter_mask/nedge_mask)
+        # logger.info('%s %d pixels, sum = %f, mean = %f', k, ninside, k14sum, k14mean)
+        if (tag_photometric == '1'):
+            k14mean = 255.0 - k14mean
+            k14mean_edge = 255.0 - k14mean_edge
+            k14mean_center = 255.0 - k14mean_center
+            k14sum = (255.0 * ninside) - k14sum
+            k14sum_edge = (255.0 * nedge_mask) - k14sum_edge
+            k14sum_center = (255.0 * ncenter_mask) - k14sum_center
+            # logger.info('-> %d pixels, sum = %f, mean = %f', ninside, k14sum, k14mean)
+        k14sum = k14sum / float(ntotal * 255)
+        k14sum_edge = k14sum_edge / float(ntotal * 255)
+        k14sum_center = k14sum_center / float(ntotal * 255)
+        k14mean = k14mean / 255.0
+        k14mean_edge = k14mean_edge / 255.0
+        k14mean_center = k14mean_center / 255.0
+        # logger.info('k14 mean %f, k14sum normalized %f for %d total pixels', k14mean, k14sum, ntotal)            
+
+        size_npixel = ninside
+        if (tag_color == 'rgb'):
+            size_npixel = size_npixel / 3.0
+        size_frac = float(ninside)/float(ntotal)
+
+        results[key]['invasion_spectral'] = sumpowerksq
+        results[key]['k14_sum'] = k14sum
+        results[key]['k14_sum_edge'] = k14sum_edge
+        results[key]['k14_sum_center'] = k14sum_center
+        results[key]['k14_mean'] = k14mean
+        results[key]['k14_mean_edge'] = k14mean_edge
+        results[key]['k14_mean_center'] = k14mean_center
+
+    print ('test')
+    print (results)
+
+    textFile = open('results.txt', 'w')
+
+    textFile.write('ID\tInvasion\tFractional Area\tK14 Sum Peripheral Pixels\tK14 Sum Central Pixels\tK14 Total Sum\tK14 Total Mean\tK14 Peripheral Mean\tK14 Central Mean\n')
+
+    for k in ctn_list:
+        textFile.write("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" %(k, results[k]['invasion_spectral'], results[k]['size_frac'], results[k]['k14_sum_edge'], results[k]['k14_sum_center'], results[k]['k14_sum'], results[k]['k14_mean'], results[k]['k14_mean_edge'], results[k]['k14_mean_center']))
+
+    textFile.close()
+
 def main():
     parser = argparse.ArgumentParser(description='Stack 2D images make a 3D rendering', epilog='', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--datafolder', help='input directory with all the data', required=True)
@@ -2366,6 +2515,7 @@ def main():
     parser.add_argument('--generate_figures', help='Generate figures', choices=['y','n'], required=False, default='n')
     parser.add_argument('--generate_plots', help='Generate plots', choices=['y','n'], required=False, default='n')
     parser.add_argument('--convolution_demo', help='Generate convolution demo', choices=['y','n'], required=False, default='n')
+    parser.add_argument('--generate_results_for_human_organoids', help='Generate results for human organoids', choices=['y','n'], required=False, default='n')
     args = parser.parse_args()
 
 
@@ -2375,6 +2525,11 @@ def main():
 
     if(args.combineimgs == 'y'):
         combine_images(args.datafolder, args.outdir)
+        return None
+
+    if (args.generate_results_for_human_organoids=='y'):
+        logger.info('Generating results for human organoids ...')
+        generate_results_for_human_organoids(args)
         return None
 
     if (args.generate_figures=='y'):

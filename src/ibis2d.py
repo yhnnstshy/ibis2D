@@ -32,6 +32,9 @@ import statsmodels.api as sm
 
 from PIL import Image, ImageDraw
 
+from scipy import ndimage
+from skimage.morphology import disk, dilation, watershed, closing, skeletonize, medial_axis
+
 import logging
 logging.basicConfig(format='%(levelname)s %(name)s.%(funcName)s: %(message)s')
 logger = logging.getLogger('ibis2d')
@@ -1099,6 +1102,32 @@ def xyfile_to_spectrum(xyfile, nfft):
     power_norm = fac * power_norm
     return(xy_raw, xy_interp, tot_length, area, form_factor, power_norm)
 
+def xyfile_to_spectrum_ii(xyfile, nfft):
+    xy_raw = file_to_points(xyfile)
+    contour_length = get_contour_length(xy_raw)
+    # make a regular grid
+    tot_length = contour_length[-1]
+    ds = tot_length / float(nfft)
+    contour_grid = np.linspace(ds, tot_length, num=nfft)
+    xy_interp = get_interpolate(xy_raw, contour_length, contour_grid)
+    area = get_area(xy_interp)
+    form_factor = (tot_length * tot_length) / (4.0 * math.pi * area)
+    xy_hat = get_rfft(xy_interp)
+    power_hat = get_power(xy_hat)
+    # points_irfft = get_irfft(points_rfft)
+    # try some normalizations
+    #(points_centered, points_normarea, points_normpower,
+    #power_normarea, power_normpower) = normalize_points(points_rfft, area)
+    #write_boundary(boundarypdf, coord_file,
+    #                   points_grid, points_irfft,
+    #                   points_centered, points_normarea, points_normpower,
+    #                   power_normarea, power_normpower)
+    power_norm = np.copy(power_hat)
+    power_norm[0] = 0.0
+    fac = 1.0 / power_norm[1]
+    power_norm = fac * power_norm
+    return(xy_raw, xy_interp, xy_hat, tot_length, area, form_factor, power_norm)
+
 def recalculate(args):
 
     all_coords = get_files_recursive(args.coords, '*.txt')
@@ -1262,6 +1291,205 @@ def recalculate(args):
     
     return(results_dict, points_dict, power_dict, rfft_dict)
     
+def get_edge_pixles(img, xy, scale, distance=10):
+    img = rgb2gray(img)
+    (mask, array) = create_boundary(img, xy, scale, 'fill')
+    #kernel
+    k = disk(distance)
+    #convolve mask and normalize output
+    mask_c=ndimage.convolve(mask, k)
+    mask_c = mask_c/(np.amax(mask_c))
+    #create new mask for edge pixels
+    edge_mask = np.zeros(mask.shape)
+    #remask and threshold to get edge pixels
+    edge_mask[(mask == 1) & (mask_c < 1)] = 1
+    #create new mask for center pixels
+    center_mask = np.zeros(mask.shape)
+    center_mask[mask_c == 1] = 1
+    return (edge_mask, center_mask)
+
+def generate_all_results(args, prev_table):
+
+    nfft = args.nfft
+    outdir = args.outdir
+    xy_dir = args.coords
+    orig_dir = args.dic_orig
+
+    new_table = copy.deepcopy(prev_table)
+    new_fields = ['invasion_spectral', 'size_perimeter', 'size_frac',
+                  'k14_mean', 'k14_sum',
+                  'k14_sum_edge', 'k14_sum_center']
+    for k in new_table:
+        for f in new_fields:
+            new_table[k][f] = '-1'
+            
+    plotfile = os.path.join(outdir, 'results.pdf')
+    pdf = PdfPages(plotfile)
+    ctn_to_keys = dict()
+    for k in new_table:
+        ctn = new_table[k]['ctn']
+        ctn_to_keys[ctn] = ctn_to_keys.get(ctn, [ ]) + [k]
+    ctn_list = sorted(ctn_to_keys.keys())
+
+    k_vector = np.arange(1 + (nfft/2)) # since rfft uses only half the range
+    k_sq = k_vector * k_vector # element multiply
+    # a reasonable smoothing function is exp(- omega^2 t^2) with t the smoothing width
+    # t = 1 is nearest neighbor
+    # omega = (2 pi / T) k
+    # so smooth the power with exp( - (2 pi / T)^2 k^2 )
+    fac = 2.0 * math.pi / float(nfft)
+    facsq = fac * fac
+    smooth = np.exp(-facsq * k_sq)
+    
+    #    for c in ctn_list:
+    # for c in ['CTN005']:
+    #for c in ctn_list[:3]:
+    for c in ctn_list:
+
+        organoids = sorted(ctn_to_keys[c])
+        nrow = len(organoids)
+        ncol = 4
+        
+        ff_list = [ ]
+        sumpower_list = [ ]
+        sumpowerksq_list = [ ]
+        k14mean_list = [ ]
+        k14_edge_mean_list = [ ]
+        k14_center_mean_list = [ ]
+        k14sum_list = [ ]
+        k14sum_edge_list = [ ]
+        k14sum_center_list = [ ]
+        k14veena_list = [ ]
+        area_list = [ ]
+        sizefrac_list = [ ]
+        perimeter_list = [ ]
+        boundary = dict()
+
+        for k in organoids:
+
+            # k14 begin
+            logger.info('... %s', k)
+            
+            xy_file = os.path.join(xy_dir, k + '_xy.txt')
+            (xy_raw, xy_interp, xy_hat, tot_length, area, form_factor, power_norm) = xyfile_to_spectrum_ii(xy_file, args.nfft)
+            power_norm = power_norm * smooth
+            power_ksq = power_norm * k_sq
+            sumpower = sum(power_norm[2:])
+            sumpowerksq = sum(power_ksq[2:])
+
+            fullpath = os.path.join(orig_dir, new_table[k]['file_orig'])
+            (img_dic, img_k14, scale, tag_photometric, tag_color) = read_image_orig(fullpath)
+            
+            size_area = scale * scale * area
+            size_perimeter = scale * tot_length
+
+            # extract k14 intensity from image
+            (img_fill, fill_np) = create_boundary(img_k14, xy_interp, scale, 'fill')
+            # nomralize image
+            #img_k14 = img_k14.astype(float)
+            #img_k14 = ((img_k14 - img_k14.min()) / img_k14.max(axis=0)) * 255
+            pixels_inside = img_k14[ fill_np > 0 ]
+            pixels_outside = img_k14[ fill_np == 0 ]
+
+            # extract k14 intensity from image for peripheral and central pixels
+            (edge_mask, center_mask) = get_edge_pixles(img_k14, xy_interp, scale)
+            pixels_inside_peripheral_mask = img_k14[edge_mask > 0]
+            pixels_inside_central_mask = img_k14[center_mask > 0]
+            k14sum_edge = np.sum(pixels_inside_peripheral_mask.ravel())
+            k14sum_center = np.sum(pixels_inside_central_mask.ravel())
+
+            k14sum = np.sum(pixels_inside.ravel())
+            k14mean = np.mean(pixels_inside.ravel())
+            k14mean_edge = np.mean(pixels_inside_peripheral_mask.ravel())
+            k14mean_center = np.mean(pixels_inside_central_mask.ravel())
+            ninside = len(pixels_inside.ravel())
+            ntotal = len(img_k14.ravel())
+            nedge_mask = len(pixels_inside_peripheral_mask.ravel())
+            ncenter_mask = len(pixels_inside_central_mask.ravel())
+            e_over_c = float(ncenter_mask/nedge_mask)
+            # logger.info('%s %d pixels, sum = %f, mean = %f', k, ninside, k14sum, k14mean)
+            if (tag_photometric == '1'):
+                k14mean = 255.0 - k14mean
+                k14mean_edge = 255.0 - k14mean_edge
+                k14mean_center = 255.0 - k14mean_center
+                k14sum = (255.0 * ninside) - k14sum
+                k14sum_edge = (255.0 * nedge_mask) - k14sum_edge
+                k14sum_center = (255.0 * ncenter_mask) - k14sum_center
+                # logger.info('-> %d pixels, sum = %f, mean = %f', ninside, k14sum, k14mean)
+            k14sum = k14sum / float(ntotal * 255)
+            k14sum_edge = k14sum_edge / float(ntotal * 255.0)
+            k14sum_center = k14sum_center / float(ntotal * 255)
+            k14mean = k14mean / 255.0
+            k14mean_edge = k14mean_edge / 255.0
+            k14mean_center = k14mean_center / 255.0
+            # logger.info('k14 mean %f, k14sum normalized %f for %d total pixels', k14mean, k14sum, ntotal)            
+            size_npixel = ninside
+            if (tag_color == 'rgb'):
+                size_npixel = size_npixel / 3.0
+            size_frac = float(ninside)/float(ntotal)
+            perimeter = float(nedge_mask)/float(ntotal)
+        
+            new_table[k]['invasion_spectral'] = str(sumpowerksq)
+            new_table[k]['size_area'] = str(size_area)
+            new_table[k]['size_perimeter'] = str(perimeter)
+            new_table[k]['size_frac'] = str(size_frac)
+            new_table[k]['k14_sum'] = str(k14sum)
+            new_table[k]['k14_mean'] = str(k14mean)
+            new_table[k]['k14_sum_edge'] = k14sum_edge
+            new_table[k]['k14_sum_center'] = k14sum_center
+
+            sumpowerksq_list.append(sumpowerksq)
+            k14mean_list.append(k14mean)
+            k14_edge_mean_list.append(k14mean_edge)
+            k14_center_mean_list.append(k14mean_center)
+            k14sum_list.append(k14sum)
+            k14sum_edge_list.append(k14sum_edge)
+            k14sum_center_list.append(k14sum_center)
+            sizefrac_list.append(size_frac)
+            area_list.append(tot_length)
+            perimeter_list.append(perimeter)
+                
+            boundary[k] = xy_interp
+
+        plt.figure() 
+        plt.axis('off')
+        plt.text(0.5,0.5,"Tumor: %s\n%s" % (organoids[0].split('_')[0], organoids[0].split('_')[2]),ha='center',va='center')
+        pdf.savefig()
+        plt.close() 
+        for (xlist, xname) in zip( (sizefrac_list, k14sum_list, k14sum_edge_list, k14sum_center_list, perimeter_list),
+            ('Fractional Area', 'K14 Sum', 'K14 Sum Peripheral Pixels', 'K14 Sum Centeral Pixels', 'Perimeter') ):
+            #area is actually legnth
+            diam = 5
+            average_area = sum(area_list)/len(area_list)
+            average_diam = average_area/(math.pi)
+            resize_factor = diam/(average_diam)
+        
+            plt.gca().set_aspect('equal')
+            axes = plt.gca()
+            xscale = 100/max(xlist)
+            yscale = 100/max(sumpowerksq_list)
+            for (x1, y1, a1) in zip(xlist, sumpowerksq_list, organoids):
+                pts = boundary[a1]
+                newx = pts[:,0]*resize_factor + (x1*xscale)
+                newy = pts[:,1]*resize_factor + (y1*yscale)
+                xy = zip(newx, newy)
+                axes.add_patch(Polygon(xy, facecolor='none', closed=True, edgecolor='blue', alpha=0.5) )
+                plt.xlabel(xname)
+                plt.ylabel('Invasion')
+                (r, pval) = pearsonr(xlist, sumpowerksq_list)
+                rsq = r*r
+                plt.title('Rsq = %.3f, pval = %.3g' % (rsq, pval))
+
+            axes.autoscale_view()    
+            plt.tight_layout()
+            pdf.savefig()
+            plt.close()
+
+    pdf.close()             
+    write_table(new_table, outdir + '/results.txt')
+    
+    return None
+
 def read_results(outdir):
     results_file = os.path.join(outdir, 'results_table.txt')
     logger.info('reading results from %s', results_file)
@@ -2462,6 +2690,10 @@ def main():
     write_table(merge_table, os.path.join(args.outdir, 'merge_table.txt'))
     
     #write_exif_tags(merge_table, args.dic_orig, os.path.join(args.outdir, 'exifs_uniq.txt'))
+    if (args.recalculate=='y'):
+        logger.info('generating all results ...')
+        generate_all_results(args, merge_table)
+        return None
     
     (organoid_table, group_table) = get_dic_xy_k14(merge_table, args.dic_orig, args.coords, args.nfft, args.outdir)
     write_table(organoid_table, os.path.join(args.outdir, 'organoid_table.txt'))
