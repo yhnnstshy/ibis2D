@@ -1331,16 +1331,38 @@ def generate_all_results(args, prev_table):
         ctn_to_keys[ctn] = ctn_to_keys.get(ctn, [ ]) + [k]
     ctn_list = sorted(ctn_to_keys.keys())
 
-    k_vector = np.arange(1 + (nfft/2)) # since rfft uses only half the range
+    #k_vector = np.arange(1 + (nfft/2)) # since rfft uses only half the range
+    #k_sq = k_vector * k_vector # element multiply
+    ## a reasonable smoothing function is exp(- omega^2 t^2) with t the smoothing width
+    ## t = 1 is nearest neighbor
+    ## omega = (2 pi / T) k
+    ## so smooth the power with exp( - (2 pi / T)^2 k^2 )
+    #fac = 2.0 * math.pi / float(nfft)
+    #facsq = fac * fac
+    #smooth = np.exp(-facsq * k_sq)
+    #
+    #pkm = k_vector * math.pi / float(k_max)
+    #fac_smooth = (np.cos(pkm))**2
+    #fac_weight = ((float(k_max)/math.pi)*np.sin(pkm))**2
+
+
+    k_max = nfft/2 # the k index goes from -nfft/2 to +nfft/2
+    k_vector = np.arange(1 + k_max)
     k_sq = k_vector * k_vector # element multiply
     # a reasonable smoothing function is exp(- omega^2 t^2) with t the smoothing width
     # t = 1 is nearest neighbor
     # omega = (2 pi / T) k
     # so smooth the power with exp( - (2 pi / T)^2 k^2 )
-    fac = 2.0 * math.pi / float(nfft)
-    facsq = fac * fac
-    smooth = np.exp(-facsq * k_sq)
+    #fac = 2.0 * math.pi / float(nfft)
+    #facsq = fac * fac
+    #smooth = np.exp(-facsq * k_sq)
     
+    pkm = k_vector * math.pi / float(k_max)
+    fac_smooth = (np.cos(pkm))**2
+    fac_weight = ((float(k_max)/math.pi)*np.sin(pkm))**2
+
+
+
     #    for c in ctn_list:
     # for c in ['CTN005']:
     #for c in ctn_list[:3]:
@@ -1372,8 +1394,11 @@ def generate_all_results(args, prev_table):
             
             xy_file = os.path.join(xy_dir, k + '_xy.txt')
             (xy_raw, xy_interp, xy_hat, tot_length, area, form_factor, power_norm) = xyfile_to_spectrum_ii(xy_file, args.nfft)
-            power_norm = power_norm * smooth
-            power_ksq = power_norm * k_sq
+
+            power_norm = fac_smooth * power_norm
+            power_ksq = fac_weight * power_norm
+            #power_norm = power_norm * smooth
+            #power_ksq = power_norm * k_sq
             sumpower = sum(power_norm[2:])
             sumpowerksq = sum(power_ksq[2:])
 
