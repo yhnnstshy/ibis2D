@@ -1,6 +1,6 @@
 backports.functools-lru-cache==1.5
 cycler==0.10.0
-Django==1.11.13
+Django==1.11.29
 ExifRead==2.1.2
 image==1.5.24
 itk==4.13.0
